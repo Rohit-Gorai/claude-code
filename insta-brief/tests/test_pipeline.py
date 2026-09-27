@@ -148,6 +148,13 @@ class PipelineTest(unittest.TestCase):
         edition, warnings = finalize({"stories": [], "quick_hits": [{"text": "Sample hit"}]}, [], self.cfg)
         self.assertEqual([h["text"] for h in edition["quick_hits"]], ["Sample hit"])
 
+    def test_custom_credit_passes_through(self):
+        cid = self.candidates[0]["id"]
+        raw = {"stories": [{"candidate_id": cid, "category": "MONEY", "headline": "RBI Cuts Rate", "highlight": "RBI",
+                            "summary": "x", "why_it_matters": "", "alt_text": "a", "credit": "Image: PIB"}]}
+        edition, _ = finalize(raw, self.candidates, self.cfg)
+        self.assertEqual(edition["stories"][0]["credit"], "Image: PIB")
+
     def test_empty_images_forces_typographic_card(self):
         cid = self.candidates[0]["id"]
         base = {"candidate_id": cid, "category": "MONEY", "headline": "RBI Cuts Rate", "highlight": "RBI",

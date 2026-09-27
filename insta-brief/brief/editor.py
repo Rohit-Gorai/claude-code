@@ -268,6 +268,7 @@ def finalize(raw: dict, candidates: list[dict], cfg: dict) -> tuple[dict, list[s
                 "link": s.get("link") or (c["links"][0]["url"] if c and c.get("links") else ""),
                 "images": s["images"] if "images" in s else (c["images"] if c else []),  # [] = typographic card
                 "image_position": s.get("image_position", ""),
+                "credit": s.get("credit", ""),
             }
         )
     want = cfg["format"]["stories"]

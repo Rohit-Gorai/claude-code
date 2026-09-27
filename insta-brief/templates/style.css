@@ -163,6 +163,7 @@ body { width: var(--w); height: var(--h); overflow: hidden; }
 
 /* ── footer swipe cue ──────────────────────────── */
 .swipe { flex: none; margin-top: 18px; }
+.masthead, .dateline, .rule2, .hook, .headline, .hits, .follow { flex-shrink: 0; }
 .swipe .row {
   margin-top: 22px;
   display: flex; justify-content: space-between; align-items: center;

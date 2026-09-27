@@ -56,6 +56,18 @@ function fitSlide(el, minPx, minFigure) {
     size -= 1; el.style.fontSize = size + "px";
   }
 }
+function fitHits() {
+  const hits = [...document.querySelectorAll(".hits .t")], rows = [...document.querySelectorAll(".hits li")];
+  const foot = document.querySelector(".swipe"), slide = document.querySelector(".slide");
+  if (!hits.length || !foot) return;
+  const limit = slide.getBoundingClientRect().bottom - parseFloat(getComputedStyle(slide).paddingBottom);
+  let size = parseFloat(getComputedStyle(hits[0]).fontSize);
+  while (foot.getBoundingClientRect().bottom > limit + 1 && size > 20) {
+    size -= 1;
+    hits.forEach(h => h.style.fontSize = size + "px");
+    rows.forEach(r => { r.style.paddingTop = r.style.paddingBottom = Math.max(8, size * 0.5) + "px"; });
+  }
+}
 window.__layout = async () => {
   await document.fonts.ready;
   await Promise.all([...document.images].map(img => img.decode().catch(() => {})));
@@ -67,6 +79,7 @@ window.__layout = async () => {
   document.querySelectorAll(".hits .t").forEach(el => fitLines(el, 2, 22));
   fitSlide(document.querySelector(".summary"), 26, {{ min_figure }});
   fitSlide(document.querySelector(".headline"), 44, {{ min_figure }});
+  fitHits();
   return true;
 };
 </script>

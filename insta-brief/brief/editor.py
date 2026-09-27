@@ -274,11 +274,23 @@ def finalize(raw: dict, candidates: list[dict], cfg: dict) -> tuple[dict, list[s
     if len(stories) < want:
         warnings.append(f"only {len(stories)} stories (config asks for {want})")
     stories = stories[:want]
-    hits = [
-        {"text": h["text"].strip().rstrip("."), "candidate_id": h.get("candidate_id")}
-        for h in raw.get("quick_hits", [])
-        if h.get("text") and not (h.get("candidate_id") and h["candidate_id"] in used)
-    ][: cfg["format"]["quick_hits"]]
+    # Quick hits carry news claims too, so they must point at a real candidate
+    # (unless no candidates were loaded at all, e.g. the sample edition).
+    hits = []
+    for h in raw.get("quick_hits", []):
+        text, hid = (h.get("text") or "").strip().rstrip("."), h.get("candidate_id")
+        if not text:
+            continue
+        if by_id and hid not in by_id:
+            warnings.append(f"quick hit {text[:40]!r} has unknown candidate_id {hid!r} — dropped")
+            continue
+        if hid and hid in used:
+            warnings.append(f"quick hit {hid} repeats a story or another quick hit — dropped")
+            continue
+        if hid:
+            used.add(hid)
+        hits.append({"text": text, "candidate_id": hid})
+    hits = hits[: cfg["format"]["quick_hits"]]
     tags = [t if t.startswith("#") else f"#{t}" for t in raw.get("hashtags", [])][:5]
     edition = {
         "cover": raw.get("cover") or {"hook_accent": "Today's top stories", "hook_rest": "in 60 seconds"},

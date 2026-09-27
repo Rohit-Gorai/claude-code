@@ -113,6 +113,24 @@ class PipelineTest(unittest.TestCase):
         self.assertTrue(any("c99" in w for w in warnings))
         self.assertTrue(build_caption(edition, self.cfg).endswith("#news #india\n"))
 
+    def test_quick_hits_must_be_grounded_and_unique(self):
+        real = self.candidates[1]["id"]
+        raw = {"stories": [], "quick_hits": [
+            {"candidate_id": "c99", "text": "Invented claim"},
+            {"candidate_id": real, "text": "Real one."},
+            {"candidate_id": real, "text": "Real one again"},
+            {"text": "No id at all"},
+        ]}
+        edition, warnings = finalize(raw, self.candidates, self.cfg)
+        self.assertEqual(edition["quick_hits"], [{"text": "Real one", "candidate_id": real}])
+        self.assertTrue(any("c99" in w for w in warnings))
+        self.assertTrue(any("None" in w for w in warnings))
+        self.assertTrue(any("repeats" in w for w in warnings))
+
+    def test_quick_hits_without_candidates_are_kept(self):
+        edition, warnings = finalize({"stories": [], "quick_hits": [{"text": "Sample hit"}]}, [], self.cfg)
+        self.assertEqual([h["text"] for h in edition["quick_hits"]], ["Sample hit"])
+
     def test_empty_images_forces_typographic_card(self):
         cid = self.candidates[0]["id"]
         base = {"candidate_id": cid, "category": "MONEY", "headline": "RBI Cuts Rate", "highlight": "RBI",

@@ -50,15 +50,15 @@ news:
     - {url: "https://news.google.com/rss/headlines/section/topic/ENTERTAINMENT?hl=en-IN&gl=IN&ceid=IN:en", category: CULTURE}
     - {url: "https://news.google.com/rss/headlines/section/topic/SCIENCE?hl=en-IN&gl=IN&ceid=IN:en", category: SCIENCE}
     # Publisher feeds — direct links, so we can pull photos and article text.
-    - {url: "https://www.thehindu.com/news/national/feeder/default.rss", category: INDIA}
-    - {url: "https://indianexpress.com/section/india/feed/", category: INDIA}
-    - {url: "https://feeds.feedburner.com/ndtvnews-top-stories", category: TOP, top: true}
-    - {url: "https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml", category: INDIA}
-    - {url: "https://www.livemint.com/rss/news", category: MONEY}
-    - {url: "https://economictimes.indiatimes.com/rssfeedstopstories.cms", category: MONEY}
-    - {url: "https://feeds.bbci.co.uk/news/world/rss.xml", category: WORLD}
-    - {url: "https://www.aljazeera.com/xml/rss/all.xml", category: WORLD}
-    - {url: "https://www.theguardian.com/world/rss", category: WORLD}
-    - {url: "https://techcrunch.com/feed/", category: TECH}
-    - {url: "https://www.theverge.com/rss/index.xml", category: TECH}
-    - {url: "https://www.espncricinfo.com/rss/content/story/feeds/0.xml", category: SPORTS}
+    - {name: "The Hindu", url: "https://www.thehindu.com/news/national/feeder/default.rss", category: INDIA}
+    - {name: "Indian Express", url: "https://indianexpress.com/section/india/feed/", category: INDIA}
+    - {name: "NDTV", url: "https://feeds.feedburner.com/ndtvnews-top-stories", category: TOP, top: true}
+    - {name: "Hindustan Times", url: "https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml", category: INDIA}
+    - {name: "Mint", url: "https://www.livemint.com/rss/news", category: MONEY}
+    - {name: "Economic Times", url: "https://economictimes.indiatimes.com/rssfeedstopstories.cms", category: MONEY}
+    - {name: "BBC News", url: "https://feeds.bbci.co.uk/news/world/rss.xml", category: WORLD}
+    - {name: "Al Jazeera", url: "https://www.aljazeera.com/xml/rss/all.xml", category: WORLD}
+    - {name: "The Guardian", url: "https://www.theguardian.com/world/rss", category: WORLD}
+    - {name: "TechCrunch", url: "https://techcrunch.com/feed/", category: TECH}
+    - {name: "The Verge", url: "https://www.theverge.com/rss/index.xml", category: TECH}
+    - {name: "ESPNcricinfo", url: "https://www.espncricinfo.com/rss/content/story/feeds/0.xml", category: SPORTS}

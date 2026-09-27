@@ -19,6 +19,12 @@ from .config import ROOT, USER_AGENT
 from .fetch import direct_links
 
 MIN_IMAGE_WIDTH = 560  # smaller images look blurry across a 912px-wide slide
+# Share-card images with a big publisher logo burned in (e.g. The Guardian's "overlay-base64" cards).
+WATERMARKED = ("overlay-base64",)
+
+
+def usable_image_url(url: str) -> bool:
+    return bool(url) and not any(w in url for w in WATERMARKED)
 
 
 def _article(url: str) -> dict:
@@ -35,7 +41,8 @@ def _article(url: str) -> dict:
 
     scope = soup.find("article") or soup
     paras = [re.sub(r"\s+", " ", p.get_text(" ")).strip() for p in scope.find_all("p")]
-    paras = [p for p in paras if len(p) > 70 and not p.lower().startswith(("also read", "read more", "subscribe"))]
+    junk = ("also read", "read more", "subscribe", "subscription", "newsletter", "sign up", "unlock", "download the app")
+    paras = [p for p in paras if len(p) > 70 and not any(j in p.lower()[:160] for j in junk)]
     return {
         "image": meta("og:image", "og:image:url", "twitter:image"),
         "description": meta("og:description", "description", "twitter:description"),
@@ -62,7 +69,7 @@ def enrich(candidates: list[dict], top: int, log=print) -> None:
                 c["article_text"] = art["text"]
             if art["description"] and len(art["description"]) > len(c.get("summary", "")):
                 c["summary"] = art["description"][:600]
-            if art["image"]:
+            if usable_image_url(art["image"]):
                 c["images"] = [art["image"], *[u for u in c["images"] if u != art["image"]]]
     log(f"  enriched {sum(1 for c in candidates[:top] if c.get('article_text'))}/{min(top, len(candidates))} stories with article text")
 
@@ -70,6 +77,8 @@ def enrich(candidates: list[dict], top: int, log=print) -> None:
 def download_image(urls: list[str], dest_stem: Path) -> tuple[Path, str] | tuple[None, None]:
     """Save the first usable (big enough, decodable) image. Returns (file path, source url)."""
     for url in urls:
+        if not usable_image_url(url):
+            continue
         try:
             if url.startswith(("http://", "https://")):
                 r = requests.get(url, headers={"User-Agent": USER_AGENT, "Referer": url}, timeout=20)

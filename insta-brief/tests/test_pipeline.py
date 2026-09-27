@@ -83,6 +83,23 @@ class PipelineTest(unittest.TestCase):
         cricket = [c for c in self.candidates if "Australia" in c["title"]]
         self.assertEqual(len(cricket), 1, "both cricket headlines should merge into one story")
 
+    def test_dates_do_not_merge_unrelated_stories(self):
+        from brief.fetch import _similar, _tokens
+
+        a = _tokens("KOW vs USRC Cricket Scorecard, 1st Match at Kowloon, September 27, 2026")
+        b = _tokens("HT morning news brief September 27: EC says all SIR calls unanimous")
+        c = _tokens("Asian Games 2026: India wins gold medal in men's kabaddi after beating Iran")
+        self.assertFalse(_similar(a, b))
+        self.assertFalse(_similar(a, c))
+        self.assertNotIn("2026", c)
+        self.assertIn("25", _tokens("RBI cuts repo rate by 25 bps"))  # real numbers still count
+
+    def test_watermarked_share_cards_are_skipped(self):
+        from brief.enrich import usable_image_url
+
+        self.assertFalse(usable_image_url("https://i.guim.co.uk/img/x.jpg?width=1200&overlay-base64=L2ltZy9"))
+        self.assertTrue(usable_image_url("https://images.indianexpress.com/2026/09/lng-train.jpg"))
+
     def test_basic_edition_finalizes(self):
         raw = edit_basic(self.candidates, self.cfg, NOW.date())
         edition, warnings = finalize(raw, self.candidates, self.cfg)

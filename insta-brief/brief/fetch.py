@@ -36,8 +36,17 @@ SKIP = re.compile(
 )
 
 
+MONTHS = r"(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)"
+DATES = re.compile(
+    rf"\b(?:\d{{1,2}}(?:st|nd|rd|th)?\s+{MONTHS}|{MONTHS}\s+\d{{1,2}}(?:st|nd|rd|th)?|{MONTHS})\b|\b20[2-3]\d\b"
+    r"|\b(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b"
+)
+
+
 def _tokens(title: str) -> set[str]:
-    words = re.findall(r"[a-z0-9₹$%]+", title.lower().replace("'s", ""))
+    # Dates ("September 27", "2026") appear in unrelated headlines and must not glue stories together.
+    text = DATES.sub(" ", title.lower().replace("’", "'").replace("'s", ""))
+    words = re.findall(r"[a-z0-9₹$%]+", text)
     out = set()
     for w in words:
         if w in STOPWORDS or (len(w) < 3 and not w.isdigit()):
@@ -91,7 +100,7 @@ def _load(feed: dict) -> bytes:
 
 def parse_feed(feed: dict, content: bytes, now: dt.datetime) -> list[dict]:
     parsed = feedparser.parse(content)
-    feed_title = _text(parsed.feed.get("title", "")) or _host(feed["url"])
+    feed_title = feed.get("name") or _text(parsed.feed.get("title", "")) or _host(feed["url"])
     feed_title = re.split(r"\s[-|:]\s", feed_title)[0].strip()
     items = []
     for e in parsed.entries:

@@ -46,7 +46,9 @@ If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-
    - official sources: the company/government/team/ISRO/PIB press release or handout photo;
    - Wikimedia Commons for people, places and landmarks (use the `upload.wikimedia.org` file URL).
    Use a direct `.jpg`/`.png`/`.webp` URL at least ~600px wide that actually shows the story's
-   subject (a person's face, the place, the product), never a logo or a generic stock image.
+   subject (a person's face, the place, the product), never a logo graphic, a generic stock
+   illustration, or a share card with another outlet's big logo burned in (The Guardian's are
+   skipped automatically). For a company story, a photo of its CEO or office beats its logo.
 8. **Render.** Run `python -m brief render`. It prints `Photos: N/M stories have a real photo`.
    For each story still missing one, try the next source above and re-render. Use the
    text-only card only as a last resort, and name those stories in your report. If *every*

@@ -28,7 +28,7 @@
     {{ creases | safe }}
   </svg>
 
-  <header class="masthead">{{ brand.name }}</header>
+  <header class="masthead">{% if logo %}<img class="logo" src="{{ logo }}" alt="{{ brand.name }}">{% else %}{{ brand.name }}{% endif %}</header>
   <div class="dateline"><span>{{ brand.edition_label }} &nbsp;·&nbsp; {{ edition_no }}</span><span>{{ date_str }}</span></div>
 
   {% block body %}{% endblock %}

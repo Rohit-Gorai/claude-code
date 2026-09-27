@@ -1,6 +1,6 @@
 ---
 name: brief-editor
-description: News editor for "The Brief" Instagram page. Fetches today's headlines, picks the biggest stories, writes catchy but accurate slide copy, and renders a ready-to-post carousel (slides + caption) with the insta-brief tool. Use when asked for today's post, today's brief, a news carousel, or to refresh/redo an edition.
+description: News editor for the "b.rief" Instagram news page. Fetches today's headlines, picks the biggest stories, writes catchy but accurate slide copy, and renders a ready-to-post carousel (slides + caption) with the insta-brief tool. Use when asked for today's post, today's brief, a news carousel, or to refresh/redo an edition.
 tools: Bash, Read, Write, Edit, Glob, WebSearch, WebFetch
 model: inherit
 color: red

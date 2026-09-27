@@ -1,4 +1,4 @@
-# The Brief: an automatic Instagram news carousel
+# b.rief: an automatic Instagram news carousel
 
 Every morning this tool reads 20 news feeds, finds the stories everyone is covering, has Claude write
 catchy (but accurate) slide copy, and renders a ready-to-post carousel in the *Brand Bulletin*
@@ -88,7 +88,8 @@ python -m brief guide     # prints the editorial rules + edition.json schema
 
 ## Customise
 
-- **Brand:** `config.yaml → brand` (name, handle, tagline, colours).
+- **Brand:** `config.yaml → brand` (name, logo, handle, tagline, colours). `assets/logo.png` is the masthead;
+  `assets/profile_picture.jpg` is a ready-made Instagram profile picture.
 - **Size:** `format.height: 1440` (3:4, Instagram's grid) or `1350` (4:5).
 - **Length:** `format.stories` (up to 18, since Instagram allows 20 slides), `format.quick_hits`.
 - **Feeds:** add/remove under `news.feeds`. Any RSS/Atom URL works. `top: true` marks top-stories feeds.

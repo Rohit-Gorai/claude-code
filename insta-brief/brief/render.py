@@ -43,6 +43,16 @@ def font_css() -> str:
     return "\n".join(rules)
 
 
+def logo_uri(brand: dict) -> str:
+    """The masthead logo as a data URI (so rendering never depends on file:// access rules)."""
+    if not brand.get("logo"):
+        return ""
+    path = Path(brand["logo"])
+    path = path if path.is_absolute() else ROOT / path
+    mime = "image/svg+xml" if path.suffix.lower() == ".svg" else f"image/{path.suffix.lower().lstrip('.').replace('jpg', 'jpeg')}"
+    return f"data:{mime};base64," + base64.b64encode(path.read_bytes()).decode()
+
+
 def creases(seed: int, width: int, height: int, n: int = 16) -> str:
     """Faint fold lines (light edge + soft shadow) so the paper reads as crumpled newsprint."""
     r = random.Random(seed)
@@ -95,6 +105,7 @@ def render(edition: dict, cfg: dict, out_dir: Path, date: dt.date, log=print) ->
         "fmt": fmt,
         "css": (TEMPLATES / "style.css").read_text(encoding="utf-8"),
         "font_css": font_css(),
+        "logo": logo_uri(brand),
         "edition_no": edition_number(cfg, date),
         "date_str": date_label(date),
         "min_figure": 300 if fmt["height"] >= 1400 else 250,

@@ -12,9 +12,8 @@ The tool makes the posts. This page is about everything around them. The short v
 People follow pages that make a clear promise and keep it. Yours: *I'll catch you up faster than
 anyone, and I won't waste your time or mislead you.*
 
-**Name.** "The Brief" is a placeholder. Pick something short, easy to say, and easy to search.
-Ideas: *The Brief*, *Chai & Headlines*, *The Daily Swipe*, *60 Second News*, *Morning Paper*,
-*Swipe Times*. Check that the handle is free on Instagram, Threads and WhatsApp Channels.
+**Name:** **b.rief**. It's short and easy to say, and the name itself promises what the page does.
+Grab the same handle on Instagram, Threads and WhatsApp Channels so people find you everywhere.
 
 **Bio** (4 lines, no fluff):
 
@@ -25,7 +24,7 @@ Ideas: *The Brief*, *Chai & Headlines*, *The Daily Swipe*, *60 Second News*, *Mo
 👇 Get it on WhatsApp
 ```
 
-**Profile picture:** a red serif monogram (e.g. **B**) on the same paper background. It will match every post.
+**Profile picture:** use `assets/profile_picture.jpg`, your **b.** monogram with the red dot on the paper background. It matches every post.
 **Story highlights:** `Money` · `Tech` · `Sports` · `Explained` · `Corrections`.
 
 **Before launch:** post 6–9 editions *before* you tell anyone about the page. A new visitor who sees a

@@ -1,7 +1,7 @@
 # The template, dissected
 
 Your reference is *The Brand Bulletin* by @btswithbrands. Here is what makes it work, and how
-**The Brief** keeps that DNA while being built for people who just want the headlines.
+**b.rief** keeps that DNA while being built for people who just want the headlines.
 
 ![Sample carousel](samples/preview/contact_sheet.jpg)
 
@@ -19,12 +19,12 @@ Your reference is *The Brand Bulletin* by @btswithbrands. Here is what makes it 
 | **Italic serif body** | ~40 words, centred, under the image | Short enough to read in 5 seconds. The italic serif reads as "the story" in contrast to the loud headline. |
 | **Swipe cue** | Italic caps `SWIPE TO KNOW  >>` under a double rule | An explicit call to action. Swipes are a strong engagement signal. |
 
-## 2. The Brief's slide system
+## 2. b.rief's slide system
 
 ```
 ┌──────────────────────────────────────────┐  1080 × 1440  (3:4)
-│               The Brief                  │  masthead · Playfair Display 800 · 76px · red
-│ ▓ THE BRIEF · No. 012     27 SEPTEMBER ▓ │  dateline bar · 58px · Crimson Pro caps
+│                 b.rief                   │  masthead · your logo (assets/logo.png) · 96px tall
+│ ▓ YOUR DAILY BRIEF · No. 012  27 SEPT ▓ │  dateline bar · 58px · Crimson Pro caps
 │                                          │
 │   Stock Markets Hit a Record             │  headline · Poppins 700 · 70px · ≤3 lines
 │   High as Investors Pour Back In         │  (hook words in red, auto-shrinks to fit)

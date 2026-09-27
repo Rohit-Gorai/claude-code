@@ -33,6 +33,7 @@ body { width: var(--w); height: var(--h); overflow: hidden; }
   color: var(--accent);
   text-align: center;
 }
+.masthead .logo { display: block; height: 96px; width: auto; margin: -6px auto 0; }
 .dateline {
   margin-top: 26px;
   height: 58px;

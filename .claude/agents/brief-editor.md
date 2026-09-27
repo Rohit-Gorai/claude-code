@@ -24,7 +24,8 @@ If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-
    for today's top stories across INDIA, WORLD, MONEY, TECH, SPORTS, CULTURE and SCIENCE, keep only
    stories from the last 24 hours reported by reputable outlets, and write `candidates.json` yourself
    as a list of `{"id": "c01", "title", "summary", "sources": [...], "links": [{"url", "source"}],
-   "category", "images": []}` objects. Say in your report that this edition was built from search.
+   "category", "images": []}` objects, then find photos for the chosen stories in step 7.
+   Say in your report that this edition was built from search.
 3. **Read the candidates** (`candidates.json`). Higher `score` and more `sources` = bigger story.
    Use `summary`, `related` and `article_text` as your fact base. If earlier editions exist in
    `output/` for today, read their `edition.json` and don't repeat those stories unless there is a
@@ -36,13 +37,24 @@ If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-
    - Story #1 (slide 2) must be the strongest story; Instagram re-shows slide 2 to people who
      did not swipe.
    - Optional extra fields per story: `"image_position": "center 20%"` to move the photo crop,
-     `"images": [url, ...]` to supply a better photo (only official/press/handout images or ones
-     the page has rights to).
+     `"images": [url, ...]` to supply a better photo than the article's (see step 7).
 6. **Check.** Run `python -m brief check`. Fix every warning it prints and re-run until clean.
-7. **Render.** Run `python -m brief render`. Then Read each slide JPG and look at it: headline
-   fits in 3 lines, the red highlight is on the right words, the photo crop shows faces/subjects,
+7. **Real photos for every story.** Every story slide should carry a real news photo, not the
+   text-only card. For any story whose candidate has no `images`, find a photo and add
+   `"images": ["<direct image URL>", ...]` (best first) to that story in `edition.json`:
+   - the lead image (`og:image`) of an article about the story, found with WebSearch + WebFetch;
+   - official sources: the company/government/team/ISRO/PIB press release or handout photo;
+   - Wikimedia Commons for people, places and landmarks (use the `upload.wikimedia.org` file URL).
+   Use a direct `.jpg`/`.png`/`.webp` URL at least ~600px wide that actually shows the story's
+   subject (a person's face, the place, the product), never a logo or a generic stock image.
+8. **Render.** Run `python -m brief render`. It prints `Photos: N/M stories have a real photo`.
+   For each story still missing one, try the next source above and re-render. Use the
+   text-only card only as a last resort, and name those stories in your report. If *every*
+   download fails, the machine is blocking image websites: say so plainly in your report.
+   Then Read each slide JPG and look at it: headline fits in 3 lines, the red highlight is on the
+   right words, the photo crop shows faces/subjects (`"image_position": "center 20%"` moves it),
    nothing is cut off. Fix `edition.json` and re-render if anything looks off.
-8. **Report back** with: the list of stories (headline + sources), the path to the slides, the
+9. **Report back** with: the list of stories (headline + sources), the path to the slides, the
    full `caption.txt`, and any caveats (unconfirmed details you dropped, missing photos).
 
 ## Voice

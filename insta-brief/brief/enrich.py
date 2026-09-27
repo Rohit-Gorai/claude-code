@@ -18,7 +18,7 @@ from PIL import Image
 from .config import ROOT, USER_AGENT
 from .fetch import direct_links
 
-MIN_IMAGE_WIDTH = 640
+MIN_IMAGE_WIDTH = 560  # smaller images look blurry across a 912px-wide slide
 
 
 def _article(url: str) -> dict:
@@ -47,7 +47,7 @@ def enrich(candidates: list[dict], top: int, log=print) -> None:
     """Mutates the first `top` candidates in place: adds article_text and a lead image."""
 
     def one(c):
-        for url in direct_links(c)[:2]:
+        for url in direct_links(c)[:3]:
             try:
                 return c, _article(url), url
             except Exception:

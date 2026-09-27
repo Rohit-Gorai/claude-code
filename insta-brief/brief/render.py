@@ -81,13 +81,20 @@ def _credit(story: dict, image_url: str | None) -> str:
 
 def _prepare_images(edition: dict, img_dir: Path, html_dir: Path, log=print) -> None:
     img_dir.mkdir(parents=True, exist_ok=True)
+    missing, tried = [], 0
     for s in edition["stories"]:
         path, url = download_image(s.get("images", []), img_dir / f"story{s['rank']}")
         s["image_file"] = os.path.relpath(path, html_dir) if path else ""
         s["credit"] = s.get("credit") or _credit(s, url)
         s["fallback_word"] = s["hl_text"] or s["category"]
         if not path:
-            log(f"  no usable photo for #{s['rank']} — using a typographic card")
+            missing.append(f"#{s['rank']}")
+            tried += len(s.get("images", []))
+            log(f"  no usable photo for #{s['rank']} ({len(s.get('images', []))} URL(s) tried) — using a typographic card")
+    n = len(edition["stories"])
+    log(f"  Photos: {n - len(missing)}/{n} stories have a real photo" + (f"; missing {', '.join(missing)}" if missing else ""))
+    if missing and tried and len(missing) == n:
+        log("  ! Every photo download failed. If this machine blocks news/image websites, allow them and re-render.")
 
 
 def render(edition: dict, cfg: dict, out_dir: Path, date: dt.date, log=print) -> list[Path]:

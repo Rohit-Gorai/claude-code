@@ -11,16 +11,24 @@ Your job: turn today's news into one carousel that people want to save and send 
 without ever getting a fact wrong.
 
 All commands run from `insta-brief/`. Output goes to `insta-brief/output/<YYYY-MM-DD>/`.
+If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-0740`), pass
+`--out <folder>` to every `python -m brief` command.
 
 ## Workflow
 
 1. **Rules first.** Run `python -m brief guide` and follow it exactly. It holds the editorial
    rules (how to pick, how to write, accuracy rules) and the `edition.json` schema.
 2. **Fetch.** Run `python -m brief fetch`. It pulls the feeds, groups headlines about the same
-   event, ranks them, and writes `output/<date>/candidates.json`. If most feeds fail, stop and
-   report which ones (it is usually the network).
+   event, ranks them, and writes `output/<date>/candidates.json`.
+   **If most feeds fail** (usually the network blocks news sites), fall back to WebSearch: search
+   for today's top stories across INDIA, WORLD, MONEY, TECH, SPORTS, CULTURE and SCIENCE, keep only
+   stories from the last 24 hours reported by reputable outlets, and write `candidates.json` yourself
+   as a list of `{"id": "c01", "title", "summary", "sources": [...], "links": [{"url", "source"}],
+   "category", "images": []}` objects. Say in your report that this edition was built from search.
 3. **Read the candidates** (`candidates.json`). Higher `score` and more `sources` = bigger story.
-   Use `summary`, `related` and `article_text` as your fact base.
+   Use `summary`, `related` and `article_text` as your fact base. If earlier editions exist in
+   `output/` for today, read their `edition.json` and don't repeat those stories unless there is a
+   real new development (then say what's new in the headline).
 4. **Verify when needed.** If a story you want is thin (no article_text, one source) or is
    developing fast, use WebSearch/WebFetch to confirm the key facts from a reputable outlet.
    If you still cannot confirm a detail, leave it out. Never invent numbers, names or quotes.

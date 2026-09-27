@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+{{ font_css | safe }}
+:root {
+  --w: {{ fmt.width }}px; --h: {{ fmt.height }}px;
+  --paper: {{ brand.colors.paper }}; --ink: {{ brand.colors.ink }};
+  --accent: {{ brand.colors.accent }}; --bar: {{ brand.colors.bar }};
+}
+{{ css | safe }}
+</style>
+</head>
+<body>
+<div class="slide slide-{{ kind }}">
+  <svg class="paper" viewBox="0 0 {{ fmt.width }} {{ fmt.height }}" preserveAspectRatio="none" aria-hidden="true">
+    <filter id="crumple" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="turbulence" baseFrequency="0.0028 0.0036" numOctaves="6" seed="{{ seed }}"/>
+      <feDiffuseLighting lighting-color="#ffffff" surfaceScale="9">
+        <feDistantLight azimuth="225" elevation="40"/>
+      </feDiffuseLighting>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#crumple)"/>
+  </svg>
+  <svg class="creases" viewBox="0 0 {{ fmt.width }} {{ fmt.height }}" preserveAspectRatio="none" aria-hidden="true">
+    <filter id="soft"><feGaussianBlur stdDeviation="1.6"/></filter>
+    {{ creases | safe }}
+  </svg>
+
+  <header class="masthead">{{ brand.name }}</header>
+  <div class="dateline"><span>{{ brand.edition_label }} &nbsp;·&nbsp; {{ edition_no }}</span><span>{{ date_str }}</span></div>
+
+  {% block body %}{% endblock %}
+
+  <footer class="swipe">
+    <div class="rule2"></div>
+    <div class="row"><span>{% block swipe %}Swipe to know{% endblock %}</span><span class="arrows">{% block arrows %}&gt;&gt;{% endblock %}</span></div>
+  </footer>
+</div>
+<script>
+// Shrink text until it fits its line budget, then make sure the whole slide fits the canvas.
+function fitLines(el, maxLines, minPx) {
+  if (!el) return;
+  let size = parseFloat(getComputedStyle(el).fontSize);
+  const ratio = parseFloat(getComputedStyle(el).lineHeight) / size;
+  while (el.getBoundingClientRect().height > maxLines * size * ratio + 4 && size > minPx) {
+    size -= 1; el.style.fontSize = size + "px";
+  }
+}
+function fitSlide(el, minPx, minFigure) {
+  const fig = document.querySelector(".figure-wrap .ph, .collage");
+  if (!el || !fig) return;
+  let size = parseFloat(getComputedStyle(el).fontSize);
+  while (fig.getBoundingClientRect().height < minFigure && size > minPx) {
+    size -= 1; el.style.fontSize = size + "px";
+  }
+}
+window.__layout = async () => {
+  await document.fonts.ready;
+  await Promise.all([...document.images].map(img => img.decode().catch(() => {})));
+  fitLines(document.querySelector(".hook"), 2.2, 56);
+  fitLines(document.querySelector(".headline"), 3, 46);
+  fitLines(document.querySelector(".summary"), 5, 27);
+  fitLines(document.querySelector(".why"), 2, 20);
+  document.querySelectorAll(".fb-word").forEach(el => fitLines(el, 3, 48));
+  document.querySelectorAll(".hits .t").forEach(el => fitLines(el, 2, 22));
+  fitSlide(document.querySelector(".summary"), 26, {{ min_figure }});
+  fitSlide(document.querySelector(".headline"), 44, {{ min_figure }});
+  return true;
+};
+</script>
+</body>
+</html>

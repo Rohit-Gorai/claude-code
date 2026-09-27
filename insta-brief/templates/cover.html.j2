@@ -1,0 +1,15 @@
+{% extends "base.html.j2" %}
+{% block body %}
+  <h1 class="hook"><span class="line accent">{{ cover.hook_accent }}</span><span class="line">{{ cover.hook_rest }}</span></h1>
+  <div class="rule2"></div>
+  <div class="collage n{{ cover_stories | length }}">
+    {% for s in cover_stories %}
+    <div class="ph">
+      {% if s.image_file %}<img src="{{ s.image_file }}" style="object-position: {{ s.image_position or 'center 30%' }}">
+      {% else %}<div class="fallback"><div class="fb-kicker">{{ s.category }}</div><div class="fb-word" style="font-size: {{ 110 if loop.first else 64 }}px">{{ s.fallback_word }}</div></div>{% endif %}
+      <div class="badge{{ '' if loop.first else ' small' }}">#{{ s.rank }}</div>
+    </div>
+    {% endfor %}
+  </div>
+{% endblock %}
+{% block swipe %}Swipe to know{% endblock %}

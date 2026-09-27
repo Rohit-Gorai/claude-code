@@ -1,0 +1,173 @@
+/* The Brief — slide styles. One slide = one 1080px-wide canvas.
+   Layout mirrors the "Brand Bulletin" newspaper format:
+   masthead → dateline bar → headline → double rule → picture → text → double rule → swipe cue. */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--paper); }
+body { width: var(--w); height: var(--h); overflow: hidden; }
+
+.slide {
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  padding: 46px 84px 44px;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  color: var(--ink);
+  overflow: hidden;
+}
+.slide > *:not(.paper):not(.creases) { position: relative; z-index: 1; }
+
+/* crumpled newsprint */
+.paper, .creases { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+.paper { mix-blend-mode: multiply; opacity: .45; }
+
+/* ── masthead + dateline ───────────────────────── */
+.masthead {
+  font-family: "Playfair Display", serif;
+  font-weight: 800;
+  font-size: 76px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  text-align: center;
+}
+.dateline {
+  margin-top: 26px;
+  height: 58px;
+  padding: 0 26px;
+  background: var(--bar);
+  color: #F4F1EB;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "Crimson Pro", serif;
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+/* ── rules ─────────────────────────────────────── */
+.rule2 { height: 10px; border-top: 5px solid var(--ink); border-bottom: 1.5px solid var(--ink); flex: none; }
+
+/* ── headlines ─────────────────────────────────── */
+.hook, .headline {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  text-align: center;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.hook { margin: 32px 0 30px; font-size: 86px; line-height: 1.06; letter-spacing: -0.035em; }
+.hook .line { display: block; }
+.hook .accent { color: var(--accent); }
+.headline { margin: 34px 0 30px; font-size: 70px; line-height: 1.1; letter-spacing: -0.03em; }
+.headline .hl { color: var(--accent); }
+
+/* ── pictures ──────────────────────────────────── */
+.ph { position: relative; overflow: hidden; background: #1d1d1d; }
+.ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.badge {
+  position: absolute; left: 0; bottom: 0;
+  background: #fff; color: var(--accent);
+  font-family: "Poppins", sans-serif; font-weight: 800;
+  font-size: 44px; line-height: 1; letter-spacing: -0.02em;
+  padding: 18px 24px 16px;
+}
+.badge.small { font-size: 30px; padding: 12px 16px 10px; }
+.chip {
+  position: absolute; left: 22px; top: 22px;
+  background: var(--bar); color: #fff;
+  font-family: "Poppins", sans-serif; font-weight: 600;
+  font-size: 20px; letter-spacing: .14em; text-transform: uppercase;
+  padding: 9px 16px 7px;
+}
+.credit {
+  flex: none;
+  margin-top: 8px;
+  text-align: right;
+  font-family: "Crimson Pro", serif; font-style: italic;
+  font-size: 19px; color: #6f6c67;
+}
+
+/* typographic card when there is no usable photo */
+.fallback {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  padding: 40px 60px;
+  background: radial-gradient(120% 90% at 30% 20%, #3b3b3b 0%, #1f1f1f 70%);
+  color: #F4F1EB; text-align: center;
+}
+.fallback .fb-kicker {
+  font-family: "Poppins", sans-serif; font-weight: 600; font-size: 22px;
+  letter-spacing: .3em; color: #ff5a5f; margin-bottom: 18px;
+}
+.fallback .fb-word {
+  font-family: "Playfair Display", serif; font-weight: 800; font-style: italic;
+  font-size: 120px; line-height: .95; letter-spacing: -0.02em; text-wrap: balance;
+}
+.fallback .fb-word::after { content: ""; display: block; width: 90px; height: 6px; margin: 28px auto 0; background: var(--accent); }
+
+/* ── cover collage ─────────────────────────────── */
+.collage { flex: 1; min-height: 0; margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1.55fr 1fr; gap: 12px; }
+.collage .ph:first-child, .collage.n2 .ph { grid-column: 1 / span 2; }
+.collage.n1 { grid-template-rows: 1fr; }
+
+/* ── story body ────────────────────────────────── */
+.figure-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.figure-wrap .ph { flex: 1; min-height: 0; }
+.summary {
+  flex: none;
+  margin-top: 16px;
+  font-family: "Crimson Pro", serif; font-style: italic; font-weight: 500;
+  font-size: 36px; line-height: 1.28;
+  text-align: center; text-wrap: pretty;
+  color: var(--ink);
+}
+.why {
+  flex: none;
+  margin: 16px auto 22px;
+  max-width: 860px;
+  text-align: center;
+  font-family: "Poppins", sans-serif; font-weight: 600;
+  font-size: 25px; line-height: 1.35; letter-spacing: -0.01em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.why .label { color: var(--accent); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-right: 8px; }
+
+/* ── quick hits + follow card ──────────────────── */
+.hits { list-style: none; margin-top: 8px; }
+.hits li {
+  display: grid; grid-template-columns: 84px 1fr; align-items: baseline;
+  padding: 17px 0 16px;
+  border-bottom: 1.5px solid rgba(47, 47, 47, .22);
+}
+.hits .n { font-family: "Poppins", sans-serif; font-weight: 800; font-size: 40px; color: var(--accent); letter-spacing: -0.03em; }
+.hits .t { font-family: "Poppins", sans-serif; font-weight: 600; font-size: 29px; line-height: 1.28; letter-spacing: -0.015em; }
+.follow {
+  margin-top: auto; margin-bottom: 26px;
+  background: var(--bar); color: #F4F1EB;
+  text-align: center;
+  padding: 30px 40px 28px;
+}
+.follow .kicker { font-family: "Crimson Pro", serif; font-weight: 600; font-size: 22px; letter-spacing: .24em; text-transform: uppercase; color: #d8d2c6; }
+.follow .handle { font-family: "Playfair Display", serif; font-weight: 800; font-size: 64px; line-height: 1.1; margin: 6px 0 4px; color: #fff; }
+.follow .tag { font-family: "Crimson Pro", serif; font-style: italic; font-size: 29px; color: #e9e4da; }
+.follow .actions { display: flex; justify-content: center; gap: 46px; margin-top: 20px; }
+.follow .act { display: flex; align-items: center; gap: 10px; font-family: "Poppins", sans-serif; font-weight: 600; font-size: 21px; letter-spacing: .12em; text-transform: uppercase; }
+.follow .act svg { width: 30px; height: 30px; }
+
+/* ── footer swipe cue ──────────────────────────── */
+.swipe { flex: none; margin-top: 18px; }
+.swipe .row {
+  margin-top: 22px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: "Crimson Pro", serif; font-style: italic; font-weight: 600;
+  font-size: 23px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink);
+}
+.swipe .arrows { font-style: normal; font-family: "Poppins", sans-serif; font-weight: 700; letter-spacing: 0; }
+.slide-quickhits .swipe .arrows { font-family: "Crimson Pro", serif; font-style: italic; font-weight: 600; letter-spacing: .1em; }

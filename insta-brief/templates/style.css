@@ -156,6 +156,11 @@ body { width: var(--w); height: var(--h); overflow: hidden; }
 }
 .follow .kicker { font-family: "Crimson Pro", serif; font-weight: 600; font-size: 22px; letter-spacing: .24em; text-transform: uppercase; color: #d8d2c6; }
 .follow .handle { font-family: "Playfair Display", serif; font-weight: 800; font-size: 64px; line-height: 1.1; margin: 6px 0 4px; color: #fff; }
+.follow .handle.small { font-size: 40px; margin: 14px 0 0; }
+.follow .ask {
+  font-family: "Crimson Pro", serif; font-style: italic; font-weight: 600;
+  font-size: 40px; line-height: 1.2; color: #fff; margin: 10px auto 0; max-width: 820px; text-wrap: balance;
+}
 .follow .tag { font-family: "Crimson Pro", serif; font-style: italic; font-size: 29px; color: #e9e4da; }
 .follow .actions { display: flex; justify-content: center; gap: 46px; margin-top: 20px; }
 .follow .act { display: flex; align-items: center; gap: 10px; font-family: "Poppins", sans-serif; font-weight: 600; font-size: 21px; letter-spacing: .12em; text-transform: uppercase; }

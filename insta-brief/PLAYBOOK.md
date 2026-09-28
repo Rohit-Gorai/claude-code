@@ -51,12 +51,19 @@ rushed posts a day for two weeks.
 
 ## 3. What Instagram rewards, and how the template uses it
 
-- **Sends (shares by DM) and saves** are the strongest signals. That's why every story has a
-  *Why it matters* line people want to pass on, why the caption says *Send it to someone who needs to
-  know*, and why the last slide asks for Save · Share · Follow.
+- **Sends (shares by DM) and saves** are the strongest signals. That's why the editor picks stories
+  with a *send test* (would you forward this to a friend or the family group?), why every story has a
+  *Why it matters* line, why the caption names exactly who to send it to, and why the last slide asks
+  one easy question and for Save · Share · Follow.
+- **Reach to non-followers comes mostly from Reels.** Every edition also comes as `reel.mp4`. Post
+  it as a **Trial Reel** (shown only to non-followers first) with a trending song, alongside the
+  carousel.
+- **Politics isn't recommended.** Instagram doesn't show posts about politics, governments,
+  elections or protests to people who don't follow you (unless they change their settings). So the
+  cover and story #1 are always non-political; political stories go further back in the carousel.
 - **Time spent.** Carousels hold attention longer than single images. Seven slides of real content is the sweet spot.
 - **The second chance.** If someone scrolls past, Instagram may show the carousel again starting on
-  slide 2. So story #1 (slide 2) is always the strongest story.
+  slide 2. So story #1 (slide 2) is always the most shareable story.
 - **Search, not hashtags.** Instagram search reads captions and alt text. Keep captions keyword-rich
   (the tool lists every headline), fill in alt text, and use only 3–5 relevant hashtags. Instagram
   now caps posts at 5.

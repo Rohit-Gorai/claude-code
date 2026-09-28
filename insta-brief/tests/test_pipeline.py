@@ -164,6 +164,47 @@ class PipelineTest(unittest.TestCase):
         self.assertEqual(with_photo["stories"][0]["images"], self.candidates[0]["images"])
         self.assertEqual(no_photo["stories"][0]["images"], [])
 
+    def test_share_line_and_all_sources_in_caption(self):
+        cid = self.candidates[0]["id"]
+        story = {"candidate_id": cid, "category": "MONEY", "headline": "RBI Cuts Rate", "highlight": "RBI",
+                 "summary": "x", "why_it_matters": "", "alt_text": "a", "sources": [f"Outlet {i}" for i in range(10)]}
+        edition, _ = finalize({"stories": [story], "share_line": "Send this to the friend with a home loan"}, self.candidates, self.cfg)
+        self.assertIn("✈️ Send this to the friend with a home loan", edition["caption"])
+        self.assertIn("Outlet 9", edition["caption"])
+        generic, _ = finalize({"stories": [story]}, self.candidates, self.cfg)
+        self.assertIn("✈️ Send it to someone who needs to know", generic["caption"])
+
+    def test_political_lead_warns(self):
+        cid = self.candidates[0]["id"]
+        story = {"candidate_id": cid, "category": "politics", "headline": "Party Wins Vote", "highlight": "Party",
+                 "summary": "x", "why_it_matters": "", "alt_text": "a"}
+        _, warnings = finalize({"stories": [story]}, self.candidates, self.cfg)
+        self.assertTrue(any("non-followers" in w for w in warnings))
+
+
+class ReelTest(unittest.TestCase):
+    def test_timeline(self):
+        from brief.reel import timeline
+
+        spans = timeline(3, cover_seconds=2, seconds=3.5)
+        self.assertEqual(spans, [(0, 2), (2, 5.5), (5.5, 9)])
+
+    def test_make_reel(self):
+        from PIL import Image
+
+        from brief.reel import ffmpeg_exe, make_reel
+
+        if not ffmpeg_exe():
+            self.skipTest("no ffmpeg")
+        tmp = Path(tempfile.mkdtemp())
+        slides = []
+        for i, color in enumerate(("red", "green", "blue")):
+            path = tmp / f"0{i}.jpg"
+            Image.new("RGB", (216, 288), color).save(path)
+            slides.append(path)
+        out = make_reel(slides, tmp / "reel.mp4", cover_seconds=0.5, seconds=0.5, fps=10, size=(216, 384), log=lambda m: None)
+        self.assertTrue(out and out.stat().st_size > 0)
+
 
 if __name__ == "__main__":
     unittest.main()

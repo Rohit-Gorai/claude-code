@@ -122,7 +122,7 @@ def render(edition: dict, cfg: dict, out_dir: Path, date: dt.date, log=print) ->
     for i, s in enumerate(stories):
         slides.append((f"story{s['rank']}", "story.html.j2", {"story": s, "last": i == len(stories) - 1}))
     if edition.get("quick_hits"):
-        slides.append(("quickhits", "wrap.html.j2", {"quick_hits": edition["quick_hits"]}))
+        slides.append(("quickhits", "wrap.html.j2", {"quick_hits": edition["quick_hits"], "question": edition.get("engagement_question", "")}))
 
     written = []
     launch = {"executable_path": os.environ["BRIEF_CHROMIUM"]} if os.environ.get("BRIEF_CHROMIUM") else {}
@@ -152,4 +152,10 @@ def render(edition: dict, cfg: dict, out_dir: Path, date: dt.date, log=print) ->
         alt.append(f"Slide {len(stories) + 2}: Quick hits — " + "; ".join(h["text"] for h in edition["quick_hits"]))
     (out_dir / "alt_text.txt").write_text("\n".join(alt) + "\n", encoding="utf-8")
     write_json(out_dir / "edition.final.json", edition)
+    reel = cfg.get("reel") or {}
+    if reel.get("enabled", True):
+        from .reel import make_reel
+
+        make_reel(written, out_dir / "reel.mp4", brand["colors"]["paper"], reel.get("cover_seconds", 2.0),
+                  reel.get("seconds_per_slide", 3.5), log=log)
     return written

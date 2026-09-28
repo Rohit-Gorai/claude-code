@@ -6,9 +6,15 @@
     {% for h in quick_hits %}<li><span class="n">{{ "%02d" % loop.index }}</span><span class="t">{{ h.text }}</span></li>{% endfor %}
   </ol>
   <div class="follow">
+    {% if question %}
+    <div class="kicker">Your take? Tell us in the comments</div>
+    <div class="ask">{{ question }}</div>
+    <div class="handle small">Follow {{ brand.handle }}</div>
+    {% else %}
     <div class="kicker">Never miss a headline</div>
     <div class="handle">{{ brand.handle }}</div>
     <div class="tag">{{ brand.tagline }}</div>
+    {% endif %}
     <div class="actions">
       <span class="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4.5L6 21z"/></svg>Save</span>
       <span class="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M22 3 2 10.5l8 3 3 8z"/><path d="m22 3-12 10.5"/></svg>Share</span>

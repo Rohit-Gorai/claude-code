@@ -18,7 +18,7 @@ import re
 EDITION_SCHEMA = {
     "type": "object",
     "additionalProperties": False,
-    "required": ["cover", "stories", "quick_hits", "caption_hook", "engagement_question", "hashtags"],
+    "required": ["cover", "stories", "quick_hits", "caption_hook", "engagement_question", "share_line", "hashtags"],
     "properties": {
         "cover": {
             "type": "object",
@@ -54,6 +54,7 @@ EDITION_SCHEMA = {
         },
         "caption_hook": {"type": "string"},
         "engagement_question": {"type": "string"},
+        "share_line": {"type": "string"},
         "hashtags": {"type": "array", "items": {"type": "string"}},
     },
 }
@@ -64,38 +65,61 @@ carousel: a cover slide, {n} story slides, and a final "quick hits" slide with {
 
 Audience: {audience}
 
-HOW TO PICK
-- Biggest first. Favour stories many outlets are covering (`sources`, `score`) and stories that
-  touch readers' lives: money and prices, jobs, tech they use, safety, big sporting moments,
-  major world events, big culture moments.
-- Story #1 matters most. Instagram re-shows slide 2 to people who didn't swipe, so #1 must be the
-  strongest, most broadly interesting story of the day.
-- Mix it up: at most 2 stories from one category. Include one uplifting or "wow" story (science,
-  sport, achievement, something surprising) when there is one — those get shared.
+HOW TO PICK: THE SEND TEST
+The page grows when people send posts to friends and save them. For every candidate ask: "Would a
+18-35 year-old in India forward this to a friend or the family WhatsApp group, or save it?"
+Pick the stories that pass, then balance them. Stories that usually pass:
+- money in the reader's pocket: prices, EMIs, salaries, taxes, fuel, UPI, jobs, exams
+- India pride, firsts and records; big cricket and sports moments; famous names (stars, athletes, CEOs)
+- tech and apps people use every day; trains, flights and travel
+- "wait, what?" surprises, weird-but-true, big numbers, wholesome and uplifting human stories
+Stories that rarely pass: routine political statements, court procedure, diplomacy without stakes.
+
+- Story #1 (slide 2) and the cover are what non-followers see, so they must be the most shareable
+  story AND not political. Instagram does not recommend posts about politics, governments,
+  elections or protests to people who don't follow the page. Put those on slide 4 or later, and lead
+  with them only when nothing else comes close. Never lead with a tragedy unless it is the day's
+  overwhelming story.
+- Every edition needs at least one "your money" story and one "wow" or feel-good story when the
+  candidates have them. At most 2 stories from one category.
+- Importance still counts: a huge story (`sources`, `score`) belongs in the carousel even if it is
+  not fun, just not always as #1.
 - Skip opinion pieces, live blogs, stale stories, near-duplicates of the same event, and anything you
   cannot summarise from the material given.
-- Quick hits: {q} other notable stories that are not already in the carousel.
+- Quick hits: {q} other notable stories not already in the carousel. Favour useful, surprising or
+  feel-good one-liners over dry ones.
 
-HOW TO WRITE
-- headline: at most ~11 words, Title Case, active voice, present tense, concrete. "Rupee Falls to
-  Record Low Against Dollar" beats "Rupee Sees Movement". Curiosity is good; clickbait that
-  misleads is not.
-- highlight: the 1-4 word hook of the headline that gets coloured red, usually the who/what at the
-  start ("Ai+ Smartphone" in "Ai+ Smartphone Powers Bigg Boss 20"). Copy it exactly from the headline.
+HOW TO WRITE: SPECIFIC BEATS GENERIC
+(The quoted examples below are made up to show the style. Never reuse their facts.)
+- headline: at most ~10 words, Title Case, active voice, present tense. Lead with the most surprising
+  or useful element: a number (₹, %, a record), a famous name, or what changes for the reader. Use
+  "You/Your" when the story really is about the reader. No wire-speak ("amid", "slams", "mulls",
+  "sources say"). "Your AC Will Cost ₹3,000 More From Oct 1" beats "Appliance Makers Announce Price
+  Revision". Curiosity is good; clickbait that misleads is not.
+- highlight: the 1-4 words that get coloured red, the part that makes someone stop scrolling (the
+  number, the name, the twist). Copy it exactly from the headline.
 - summary: 25-40 words of plain English: what happened, the key number or name, what happens next.
   Short sentences. No jargon.
-- why_it_matters: at most 16 words, the "so what" for an ordinary reader. Empty string if there is no
-  honest answer.
+- why_it_matters: at most 16 words on what it means for the reader ("Your salary lands on time this
+  month"), not for institutions. Empty string if there is no honest answer.
 - category: one short caps label such as INDIA, WORLD, MONEY, TECH, SPORTS, CULTURE, SCIENCE, HEALTH,
   POLITICS, CLIMATE.
-- alt_text: one sentence describing the slide for screen readers and Instagram search.
-- cover: two short lines. hook_accent (red, 2-4 words) + hook_rest (3-6 words). Either a promise
-  ("Today's biggest headlines" / "in 60 seconds") or a teaser built on story #1. Do not repeat the
-  #1 headline word for word.
+- alt_text: one sentence describing the slide for screen readers and Instagram search. Include the key
+  names and keywords people would search for.
+- cover: the first thing a stranger sees. Two short lines about story #1 (or the edition's one big
+  theme): hook_accent (red, 2-4 words) + hook_rest (3-6 words). Make it concrete and open a curiosity
+  gap: a stake ("Your bank" / "is open after all"), a surprise ("Greece did it" / "for the first time
+  ever"), or a number ("₹3,000 more" / "for your next AC"). Never generic ("Today's top stories",
+  "Your daily brief"). Do not repeat the #1 headline word for word.
 - quick_hits text: at most 12 words, one line of news, no full stop.
-- caption_hook: the first line of the caption, at most 15 words, makes people tap "more".
-- engagement_question: one civil question tied to a story that invites opinions in the comments.
-- hashtags: 3-5 relevant hashtags including the # sign.
+- caption_hook: the first line of the caption, at most 15 words; Instagram cuts it off after ~125
+  characters, so the most intriguing fact goes first.
+- engagement_question: a question about one story that anyone can answer in a word or two, ideally
+  two clear sides ("Five-day bank week: yes or no?"). Never engagement bait like "comment YES" or
+  "tag 3 friends".
+- share_line: one line that names who to send the post to, tied to a story, starting with "Send
+  this to" ("Send this to the friend who still banks on Saturdays"). Specific beats "someone".
+- hashtags: 3-5 relevant hashtags including the # sign; people search for topics, not #news.
 - Write in {language}.
 
 ACCURACY — NON-NEGOTIABLE
@@ -215,6 +239,7 @@ def edit_basic(candidates: list[dict], cfg: dict, date: dt.date) -> dict:
         "quick_hits": [{"candidate_id": c["id"], "text": _clip_words(c["title"], 12).rstrip(".…")} for c in rest],
         "caption_hook": f"Your 60-second catch-up on {date:%d %B}'s biggest stories 👇",
         "engagement_question": "Which of these stories surprised you most?",
+        "share_line": "",
         "hashtags": ["#news", "#india", "#headlines", "#dailybrief"],
     }
 
@@ -271,6 +296,8 @@ def finalize(raw: dict, candidates: list[dict], cfg: dict) -> tuple[dict, list[s
                 "credit": s.get("credit", ""),
             }
         )
+    if stories and stories[0]["category"] in ("POLITICS", "ELECTIONS"):
+        warnings.append("story #1 is POLITICS: Instagram won't show it to non-followers, so lead with a non-political story if one is close")
     want = cfg["format"]["stories"]
     if len(stories) < want:
         warnings.append(f"only {len(stories)} stories (config asks for {want})")
@@ -299,6 +326,7 @@ def finalize(raw: dict, candidates: list[dict], cfg: dict) -> tuple[dict, list[s
         "quick_hits": hits,
         "caption_hook": raw.get("caption_hook", ""),
         "engagement_question": raw.get("engagement_question", ""),
+        "share_line": (raw.get("share_line") or "").strip(),
         "hashtags": tags,
     }
     edition["caption"] = build_caption(edition, cfg)
@@ -314,14 +342,11 @@ def build_caption(ed: dict, cfg: dict) -> str:
         lines += ["", "⚡ Quick hits on the last slide"]
     if ed["engagement_question"]:
         lines += ["", f"💬 {ed['engagement_question']}"]
-    lines += [
-        "",
-        "📌 Save this for later  ·  ✈️ Send it to someone who needs to know",
-        f"🗞️ Follow {cfg['brand']['handle']} for your daily brief",
-    ]
+    share = ed.get("share_line") or "Send it to someone who needs to know"
+    lines += ["", f"✈️ {share}", f"📌 Save this for later  ·  🗞️ Follow {cfg['brand']['handle']} for your daily brief"]
     sources = list(dict.fromkeys(src for s in ed["stories"] for src in s["sources"]))
     if sources:
-        lines += ["", "Sources: " + ", ".join(sources[:8])]
+        lines += ["", "Sources: " + ", ".join(sources)]
     if ed["hashtags"]:
         lines += ["", " ".join(ed["hashtags"])]
     return "\n".join(lines).strip() + "\n"

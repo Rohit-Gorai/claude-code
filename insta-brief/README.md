@@ -44,6 +44,7 @@ The result goes to `output/<today>/`:
 | `01_cover.jpg` … `07_quickhits.jpg` | Upload as one carousel, in this order |
 | `caption.txt` | Paste as the caption |
 | `alt_text.txt` | Instagram → Advanced settings → Accessibility → alt text per slide (helps search) |
+| `reel.mp4` | The same slides as a 9:16 Reel. Post it as a Trial Reel with a trending song (it is silent on purpose) |
 | `candidates.json` | Every story found today, ranked (for your own reading) |
 | `edition.json` | The copy Claude wrote. Edit it and run `python -m brief render` to redraw |
 

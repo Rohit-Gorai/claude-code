@@ -40,7 +40,7 @@ Your reference is *The Brand Bulletin* by @btswithbrands. Here is what makes it 
 │   high after three straight weeks...     │
 │   WHY IT MATTERS Your SIPs are up.       │  the takeaway · Poppins 600 · red label
 │ ════════════════════════════════════════ │  double rule
-│ SWIPE FOR THE NEXT                    >> │  swipe cue
+│ NEXT: WHAT SPARKED THE SHUTDOWN       >> │  teaser for the next story
 └──────────────────────────────────────────┘
 ```
 

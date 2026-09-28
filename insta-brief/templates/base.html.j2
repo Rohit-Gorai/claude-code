@@ -78,6 +78,8 @@ window.__layout = async () => {
   document.querySelectorAll(".fb-word").forEach(el => fitLines(el, 3, 48));
   document.querySelectorAll(".hits .t").forEach(el => fitLines(el, 2, 22));
   fitLines(document.querySelector(".follow .ask"), 2, 26);
+  fitLines(document.querySelector(".follow .share"), 2, 20);
+  fitLines(document.querySelector(".swipe .row > span:first-child"), 1, 16);
   fitSlide(document.querySelector(".summary"), 26, {{ min_figure }});
   fitSlide(document.querySelector(".headline"), 44, {{ min_figure }});
   fitHits();

@@ -13,4 +13,4 @@
   <p class="summary">{{ story.summary }}</p>
   {% if story.why_it_matters %}<p class="why"><span class="label">Why it matters</span>{{ story.why_it_matters }}</p>{% else %}<div style="height:22px"></div>{% endif %}
 {% endblock %}
-{% block swipe %}{{ 'Swipe for quick hits' if last else 'Swipe for the next' }}{% endblock %}
+{% block swipe %}{% if next_tease %}<span class="next">Next:</span> {{ next_tease }}{% else %}{{ 'Swipe for quick hits' if last else 'Swipe for the next' }}{% endif %}{% endblock %}

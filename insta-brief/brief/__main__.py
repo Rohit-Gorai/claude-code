@@ -6,8 +6,7 @@
     python -m brief edit                # candidates.json → edition.json (Claude or basic)
     python -m brief guide               # print the editorial rules + edition.json schema
     python -m brief check               # validate a hand/agent-written edition.json
-    python -m brief render              # edition.json → slides + caption + reel.mp4
-    python -m brief reel                # rendered slides → reel.mp4 only
+    python -m brief render              # edition.json → slides + caption
 """
 
 from __future__ import annotations
@@ -65,13 +64,12 @@ def cmd_render(cfg, out: Path, date, edition: dict) -> None:
 
     _log("Rendering slides…")
     files = render(edition, cfg, out, date, log=_log)
-    reel = " + reel.mp4" if (out / "reel.mp4").exists() else ""
-    _log(f"\nDone → {out}/  ({len(files)} slides + caption.txt + alt_text.txt{reel})")
+    _log(f"\nDone → {out}/  ({len(files)} slides + caption.txt + alt_text.txt)")
 
 
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(prog="brief", description="Make today's Instagram news carousel.")
-    ap.add_argument("command", choices=["run", "fetch", "edit", "guide", "check", "render", "reel"])
+    ap.add_argument("command", choices=["run", "fetch", "edit", "guide", "check", "render"])
     ap.add_argument("--config", help="path to config.yaml")
     ap.add_argument("--date", help="edition date YYYY-MM-DD (default: today)")
     ap.add_argument("--out", help="output folder (default: output/<date>)")
@@ -105,15 +103,6 @@ def main(argv=None) -> None:
         cmd_check(cfg, read_json(ed_path), load_cands())
     elif args.command == "render":
         cmd_render(cfg, out, date, cmd_check(cfg, read_json(ed_path), load_cands()))
-    elif args.command == "reel":
-        from .reel import make_reel
-
-        slides = sorted(out.glob("[0-9][0-9]_*.jpg"))
-        if not slides:
-            raise SystemExit(f"No slides in {out}/. Run `python -m brief render` first.")
-        r = cfg.get("reel") or {}
-        make_reel(slides, out / "reel.mp4", cfg["brand"]["colors"]["paper"], r.get("cover_seconds", 2.0),
-                  r.get("seconds_per_slide", 3.5), log=_log)
     elif args.command == "run":
         candidates = cmd_fetch(cfg, out, date)
         if mode == "manual":

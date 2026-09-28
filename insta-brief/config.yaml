@@ -23,11 +23,6 @@ format:
   quick_hits: 5                           # one-liners on the last slide
   jpeg_quality: 95
 
-reel:
-  enabled: true                           # also make reel.mp4 (9:16): Reels reach non-followers
-  cover_seconds: 2
-  seconds_per_slide: 3.5
-
 editor:
   mode: claude                            # claude = Claude API writes the copy
                                           # basic  = no AI, uses feed titles (for testing)

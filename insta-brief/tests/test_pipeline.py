@@ -181,29 +181,25 @@ class PipelineTest(unittest.TestCase):
         _, warnings = finalize({"stories": [story]}, self.candidates, self.cfg)
         self.assertTrue(any("non-followers" in w for w in warnings))
 
+    def test_formula_checks(self):
+        ids = [c["id"] for c in self.candidates[:2]]
+        base = {"category": "MONEY", "headline": "RBI Cuts Rate", "highlight": "RBI", "summary": "x",
+                "why_it_matters": "", "alt_text": "a"}
+        raw = {"cover": {"hook_accent": "Today's top stories", "hook_rest": "in 60 seconds"},
+               "stories": [{**base, "candidate_id": ids[0]}, {**base, "candidate_id": ids[1]}],
+               "engagement_question": "What do you think about all of the things that happened in the news today?"}
+        _, warnings = finalize(raw, self.candidates, self.cfg)
+        text = " | ".join(warnings)
+        for part in ("STOP: cover hook", "story #2 has no tease", "engagement question is", "no share_line"):
+            self.assertIn(part, text)
 
-class ReelTest(unittest.TestCase):
-    def test_timeline(self):
-        from brief.reel import timeline
-
-        spans = timeline(3, cover_seconds=2, seconds=3.5)
-        self.assertEqual(spans, [(0, 2), (2, 5.5), (5.5, 9)])
-
-    def test_make_reel(self):
-        from PIL import Image
-
-        from brief.reel import ffmpeg_exe, make_reel
-
-        if not ffmpeg_exe():
-            self.skipTest("no ffmpeg")
-        tmp = Path(tempfile.mkdtemp())
-        slides = []
-        for i, color in enumerate(("red", "green", "blue")):
-            path = tmp / f"0{i}.jpg"
-            Image.new("RGB", (216, 288), color).save(path)
-            slides.append(path)
-        out = make_reel(slides, tmp / "reel.mp4", cover_seconds=0.5, seconds=0.5, fps=10, size=(216, 384), log=lambda m: None)
-        self.assertTrue(out and out.stat().st_size > 0)
+        good = {"cover": {"hook_accent": "Your EMI", "hook_rest": "just got cheaper"},
+                "stories": [{**base, "candidate_id": ids[0]}, {**base, "candidate_id": ids[1], "tease": "The record nobody expected."}],
+                "engagement_question": "Rate cut: good news or too late?",
+                "share_line": "Send this to the friend with a home loan"}
+        edition, warnings = finalize(good, self.candidates, self.cfg)
+        self.assertFalse([w for w in warnings if w.split(":")[0] in ("STOP", "SWIPE", "SHARE")])
+        self.assertEqual(edition["stories"][1]["tease"], "The record nobody expected")
 
 
 if __name__ == "__main__":

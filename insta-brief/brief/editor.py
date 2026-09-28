@@ -31,12 +31,13 @@ EDITION_SCHEMA = {
             "items": {
                 "type": "object",
                 "additionalProperties": False,
-                "required": ["candidate_id", "category", "headline", "highlight", "summary", "why_it_matters", "alt_text"],
+                "required": ["candidate_id", "category", "headline", "highlight", "tease", "summary", "why_it_matters", "alt_text"],
                 "properties": {
                     "candidate_id": {"type": "string"},
                     "category": {"type": "string"},
                     "headline": {"type": "string"},
                     "highlight": {"type": "string"},
+                    "tease": {"type": "string"},
                     "summary": {"type": "string"},
                     "why_it_matters": {"type": "string"},
                     "alt_text": {"type": "string"},
@@ -65,6 +66,19 @@ carousel: a cover slide, {n} story slides, and a final "quick hits" slide with {
 
 Audience: {audience}
 
+THE VIRALITY FORMULA: STOP → SWIPE → FEEL → SHARE
+Every carousel is built to earn four actions, in this order:
+1. STOP. The cover makes a stranger stop scrolling: one concrete hook about the most shareable
+   story (a number, a famous name or a stake for the reader), backed by a photo with a face.
+2. SWIPE. Every story slide ends on an open loop: its footer teases the next story ("Next: the
+   ₹ change hitting your wallet"), so people keep swiping. Slide 2 is the strongest story because
+   Instagram re-shows it to people who didn't swipe.
+3. FEEL. The edition has an emotional arc, not a list of bad news: open with the most shareable
+   story, give readers something useful for their money, and put a "wow" or feel-good story last,
+   just before the quick hits. At most one heavy or tragic story.
+4. SHARE. The last slide asks one easy question (answerable in a word) and tells readers exactly
+   who to send the post to. People share when you name the friend.
+
 HOW TO PICK: THE SEND TEST
 The page grows when people send posts to friends and save them. For every candidate ask: "Would a
 18-35 year-old in India forward this to a friend or the family WhatsApp group, or save it?"
@@ -82,6 +96,8 @@ Stories that rarely pass: routine political statements, court procedure, diploma
   overwhelming story.
 - Every edition needs at least one "your money" story and one "wow" or feel-good story when the
   candidates have them. At most 2 stories from one category.
+- Order: #1 most shareable (non-political); a "your money" story early; politics and heavy news in
+  the middle; the "wow" or feel-good story last.
 - Importance still counts: a huge story (`sources`, `score`) belongs in the carousel even if it is
   not fun, just not always as #1.
 - Skip opinion pieces, live blogs, stale stories, near-duplicates of the same event, and anything you
@@ -98,6 +114,9 @@ HOW TO WRITE: SPECIFIC BEATS GENERIC
   Revision". Curiosity is good; clickbait that misleads is not.
 - highlight: the 1-4 words that get coloured red, the part that makes someone stop scrolling (the
   number, the name, the twist). Copy it exactly from the headline.
+- tease: at most 6 words, shown at the bottom of the slide *before* this story as "Next: …".
+  Tease without telling: open a question the slide answers ("Why your bank is open today",
+  "The record nobody expected"). Never give away the answer or repeat the headline.
 - summary: 25-40 words of plain English: what happened, the key number or name, what happens next.
   Short sentences. No jargon.
 - why_it_matters: at most 16 words on what it means for the reader ("Your salary lands on time this
@@ -114,11 +133,12 @@ HOW TO WRITE: SPECIFIC BEATS GENERIC
 - quick_hits text: at most 12 words, one line of news, no full stop.
 - caption_hook: the first line of the caption, at most 15 words; Instagram cuts it off after ~125
   characters, so the most intriguing fact goes first.
-- engagement_question: a question about one story that anyone can answer in a word or two, ideally
-  two clear sides ("Five-day bank week: yes or no?"). Never engagement bait like "comment YES" or
-  "tag 3 friends".
-- share_line: one line that names who to send the post to, tied to a story, starting with "Send
-  this to" ("Send this to the friend who still banks on Saturdays"). Specific beats "someone".
+- engagement_question: shown on the last slide and in the caption. A question about one story that
+  anyone can answer in a word or two, ideally two clear sides ("Five-day bank week: yes or no?"),
+  at most 10 words. Never engagement bait like "comment YES" or "tag 3 friends".
+- share_line: shown on the last slide and in the caption. At most 12 words, names who to send the
+  post to, tied to a story, starts with "Send this to" ("Send this to the friend who still banks on
+  Saturdays"). Specific beats "someone".
 - hashtags: 3-5 relevant hashtags including the # sign; people search for topics, not #news.
 - Write in {language}.
 
@@ -228,6 +248,7 @@ def edit_basic(candidates: list[dict], cfg: dict, date: dt.date) -> dict:
                 "category": "BIG STORY" if c["category"] == "TOP" else c["category"],
                 "headline": headline,
                 "highlight": _lead_phrase(headline),
+                "tease": "",
                 "summary": _clip_words(body, 40),
                 "why_it_matters": "",
                 "alt_text": f"News slide: {headline}",
@@ -286,6 +307,7 @@ def finalize(raw: dict, candidates: list[dict], cfg: dict) -> tuple[dict, list[s
                 "hl_before": headline[:i],
                 "hl_text": hl,
                 "hl_after": headline[i + len(hl) :],
+                "tease": " ".join((s.get("tease") or "").split()).rstrip("."),
                 "summary": s["summary"].strip(),
                 "why_it_matters": s.get("why_it_matters", "").strip(),
                 "alt_text": s.get("alt_text", headline),
@@ -329,8 +351,36 @@ def finalize(raw: dict, candidates: list[dict], cfg: dict) -> tuple[dict, list[s
         "share_line": (raw.get("share_line") or "").strip(),
         "hashtags": tags,
     }
+    warnings += formula_warnings(edition)
     edition["caption"] = build_caption(edition, cfg)
     return edition, warnings
+
+
+GENERIC_HOOKS = ("top stories", "headlines", "daily brief", "your brief", "60 seconds", "today's news", "news today")
+
+
+def formula_warnings(ed: dict) -> list[str]:
+    """Check the edition against the STOP → SWIPE → FEEL → SHARE formula (see GUIDE)."""
+    out = []
+    hook = f"{ed['cover'].get('hook_accent', '')} {ed['cover'].get('hook_rest', '')}".lower()
+    if any(g in hook for g in GENERIC_HOOKS):
+        out.append(f"STOP: cover hook {hook.strip()!r} is generic; name something concrete from story #1")
+    for s in ed["stories"][1:]:
+        if not s["tease"]:
+            out.append(f"SWIPE: story #{s['rank']} has no tease, so slide {s['rank']} can't end on 'Next: …'")
+        elif len(s["tease"].split()) > 6:
+            out.append(f"SWIPE: tease for #{s['rank']} is {len(s['tease'].split())} words (max 6)")
+    q = ed.get("engagement_question", "")
+    if not q:
+        out.append("SHARE: no engagement_question for the last slide")
+    elif len(q.split()) > 10:
+        out.append(f"SHARE: engagement question is {len(q.split())} words; make it answerable at a glance (max 10)")
+    share = ed.get("share_line", "")
+    if not share:
+        out.append("SHARE: no share_line ('Send this to the friend who …')")
+    elif len(share.split()) > 12:
+        out.append(f"SHARE: share_line is {len(share.split())} words (max 12)")
+    return out
 
 
 def build_caption(ed: dict, cfg: dict) -> str:

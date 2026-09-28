@@ -51,13 +51,18 @@ rushed posts a day for two weeks.
 
 ## 3. What Instagram rewards, and how the template uses it
 
+Every carousel is built on one formula, **STOP → SWIPE → FEEL → SHARE**:
+
+| Step | On the post | Why it works |
+|---|---|---|
+| **Stop** | A concrete cover hook about the most shareable story (a number, a name, a stake), with a face | The cover is all a stranger sees in Explore and the feed |
+| **Swipe** | Every story slide ends with *Next: …*, a teaser for the next story | Open loops keep people swiping, and time spent tells Instagram the post is worth showing |
+| **Feel** | Shareable lead, a "your money" story early, the feel-good story last | A post that is all bad news gets read, but a post that ends on a high gets shared |
+| **Share** | The last slide asks a one-word question and names who to send the post to | People comment when answering is effortless, and share when you name the friend |
+
 - **Sends (shares by DM) and saves** are the strongest signals. That's why the editor picks stories
-  with a *send test* (would you forward this to a friend or the family group?), why every story has a
-  *Why it matters* line, why the caption names exactly who to send it to, and why the last slide asks
-  one easy question and for Save · Share · Follow.
-- **Reach to non-followers comes mostly from Reels.** Every edition also comes as `reel.mp4`. Post
-  it as a **Trial Reel** (shown only to non-followers first) with a trending song, alongside the
-  carousel.
+  with a *send test* (would you forward this to a friend or the family group?) and why every story has
+  a *Why it matters* line.
 - **Politics isn't recommended.** Instagram doesn't show posts about politics, governments,
   elections or protests to people who don't follow you (unless they change their settings). So the
   cover and story #1 are always non-political; political stories go further back in the carousel.

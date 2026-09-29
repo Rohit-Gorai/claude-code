@@ -19,7 +19,10 @@ import feedparser
 import requests
 from bs4 import BeautifulSoup
 
+from . import virality
 from .config import USER_AGENT
+
+VIRAL_WEIGHT = 1.0  # how much shareability moves a story up the ranking (1 source = 1.5 points)
 
 STOPWORDS = set(
     """a an the and or but of to in on at for from by with as is are was were be been being it its this that these those
@@ -207,6 +210,7 @@ def cluster(items: list[dict], now: dt.datetime | None = None, limit: int = 60) 
             + (1.0 if any(m["top"] for m in members) else 0.0)
             + (0.3 if images else 0.0)
         )
+        viral, flags = virality.signals(virality.story_text(titles[0], titles[1:] + related, summaries[0] if summaries else ""))
         out.append(
             {
                 "title": min(titles, key=lambda s: abs(len(s) - 75)),
@@ -220,9 +224,12 @@ def cluster(items: list[dict], now: dt.datetime | None = None, limit: int = 60) 
                 "age_hours": round(age_h, 1),
                 "images": images[:6],
                 "score": round(score, 2),
+                "viral": viral,
+                "flags": flags,
             }
         )
-    out.sort(key=lambda c: c["score"], reverse=True)
+    # Big stories first, nudged by how shareable their topic is (see virality.py / VIRALITY.md).
+    out.sort(key=lambda c: c["score"] + VIRAL_WEIGHT * c["viral"], reverse=True)
     return [{"id": f"c{i:02d}", **c} for i, c in enumerate(out[:limit], 1)]
 
 
@@ -236,4 +243,4 @@ if __name__ == "__main__":  # quick manual check: python -m brief.fetch
     cfg = load_config()
     got = fetch_all(cfg["news"]["feeds"], cfg["news"]["max_age_hours"], log=lambda m: print(m, file=sys.stderr))
     for c in cluster(got)[:20]:
-        print(f'{c["score"]:5.1f}  {len(c["sources"])} src  {c["category"]:8} {c["title"]}')
+        print(f'{c["score"]:5.1f} {c["viral"]:+4.1f}  {len(c["sources"])} src  {c["category"]:8} {c["title"]}  {",".join(c["flags"])}')

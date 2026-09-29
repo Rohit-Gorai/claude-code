@@ -5,21 +5,23 @@
 
 brand:
   name: "b.rief"                          # page name (used in captions, alt text, the editor's brief)
-  logo: "assets/logo.png"                 # masthead image at the top of every slide; remove to use `name` as text
-  handle: "@b.rief"                       # shown on the last slide + caption
-  edition_label: "YOUR DAILY BRIEF"       # left side of the grey dateline bar
+  logo: "assets/logo.png"                 # logo on light slides (quick hits); remove to use `name` as text
+  logo_white: "assets/logo-white.png"     # logo on photos and dark slides
+  handle: "@b.rief"                       # watermark on every slide + caption
   tagline: "The day's biggest headlines. One swipe at a time."
+  schedule: "10 AM · 2 PM · 6 PM · 10 PM"  # shown on the last slide so people know when to come back
   first_edition_date: 2026-09-27          # edition numbers count up from this day (No. 001)
   colors:
-    paper: "#F1EEE8"                      # crumpled-newsprint background
-    ink: "#2F2F2F"                        # headline / body text
-    accent: "#E3120B"                     # highlighted words, badges (matches the logo's red dot)
-    bar: "#474747"                        # dateline bar and category chips
+    paper: "#F6F2EA"                      # cream reading panel under the photo
+    ink: "#141416"                        # body text on cream
+    accent: "#E3120B"                     # marker highlight, progress bar, Swipe button (the logo's red dot)
+    dark: "#0E0E11"                       # "Next" bar, numbers slide, call-to-action card
 
 format:
   width: 1080
-  height: 1440                            # 3:4 = Instagram's current grid ratio. Use 1350 for 4:5.
-  stories: 5                              # story slides per carousel (cover + stories + quick hits)
+  height: 1440                            # 3:4 fills the profile grid when you post by hand.
+                                          # Schedulers reject 3:4: use 1350 (4:5) if you schedule posts.
+  stories: 5                              # story slides per carousel (cover + stories + numbers + quick hits = 8)
   quick_hits: 5                           # one-liners on the last slide
   jpeg_quality: 95
 

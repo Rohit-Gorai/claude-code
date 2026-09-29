@@ -7,82 +7,83 @@
 :root {
   --w: {{ fmt.width }}px; --h: {{ fmt.height }}px;
   --paper: {{ brand.colors.paper }}; --ink: {{ brand.colors.ink }};
-  --accent: {{ brand.colors.accent }}; --bar: {{ brand.colors.bar }};
+  --accent: {{ brand.colors.accent }}; --dark: {{ brand.colors.dark }};
 }
 {{ css | safe }}
 </style>
 </head>
 <body>
-<div class="slide slide-{{ kind }}">
-  <svg class="paper" viewBox="0 0 {{ fmt.width }} {{ fmt.height }}" preserveAspectRatio="none" aria-hidden="true">
-    <filter id="crumple" x="0" y="0" width="100%" height="100%">
-      <feTurbulence type="turbulence" baseFrequency="0.0028 0.0036" numOctaves="6" seed="{{ seed }}"/>
-      <feDiffuseLighting lighting-color="#ffffff" surfaceScale="9">
-        <feDistantLight azimuth="225" elevation="40"/>
-      </feDiffuseLighting>
-    </filter>
-    <rect width="100%" height="100%" filter="url(#crumple)"/>
-  </svg>
-  <svg class="creases" viewBox="0 0 {{ fmt.width }} {{ fmt.height }}" preserveAspectRatio="none" aria-hidden="true">
-    <filter id="soft"><feGaussianBlur stdDeviation="1.6"/></filter>
-    {{ creases | safe }}
-  </svg>
-
-  <header class="masthead">{% if logo %}<img class="logo" src="{{ logo }}" alt="{{ brand.name }}">{% else %}{{ brand.name }}{% endif %}</header>
-  <div class="dateline"><span>{{ brand.edition_label }} &nbsp;·&nbsp; {{ edition_no }}</span><span>{{ date_str }}</span></div>
-
+<div class="slide slide-{{ kind }} {{ 'on-dark' if dark_top else 'on-light' }}">
   {% block body %}{% endblock %}
 
-  <footer class="swipe">
-    <div class="rule2"></div>
-    <div class="row"><span>{% block swipe %}Swipe to know{% endblock %}</span><span class="arrows">{% block arrows %}&gt;&gt;{% endblock %}</span></div>
-  </footer>
+  {# Story-style progress bar + logo + counter: tells people there is more to swipe. #}
+  <div class="chrome">
+    <div class="progress">{% for i in range(total) %}<i class="{{ 'done' if i + 1 < index else ('now' if i + 1 == index else '') }}"></i>{% endfor %}</div>
+    <div class="topbar">
+      {% if logo %}<img class="logo" src="{{ logo_white if dark_top else logo }}" alt="{{ brand.name }}">{% else %}<span class="wordmark">{{ brand.name }}</span>{% endif %}
+      <span class="count">{{ index }}<span>/{{ total }}</span></span>
+    </div>
+  </div>
 </div>
 <script>
-// Shrink text until it fits its line budget, then make sure the whole slide fits the canvas.
+// Auto-fit: shrink text until each block fits its line budget and the slide fits the canvas.
+const px = el => parseFloat(getComputedStyle(el).fontSize);
+const setPx = (el, v) => { el.style.fontSize = v + "px"; };
 function fitLines(el, maxLines, minPx) {
   if (!el) return;
-  let size = parseFloat(getComputedStyle(el).fontSize);
+  let size = px(el);
   const ratio = parseFloat(getComputedStyle(el).lineHeight) / size;
-  while (el.getBoundingClientRect().height > maxLines * size * ratio + 4 && size > minPx) {
-    size -= 1; el.style.fontSize = size + "px";
+  while (el.getBoundingClientRect().height > maxLines * size * ratio + 4 && size > minPx) setPx(el, --size);
+}
+function fitWidth(el, minPx) {
+  if (!el) return;
+  let size = px(el);
+  while (el.scrollWidth > el.clientWidth + 1 && size > minPx) setPx(el, --size);
+}
+// Shrink a group of elements together (keeps sizes consistent) until `done()` is true.
+function shrinkUntil(els, minPx, done) {
+  els = els.filter(Boolean);
+  if (!els.length) return;
+  let guard = 200;
+  while (!done() && guard--) {
+    let changed = false;
+    els.forEach(el => { const s = px(el); if (s > minPx) { setPx(el, s - 1); changed = true; } });
+    if (!changed) break;
   }
 }
-function fitSlide(el, minPx, minFigure) {
-  const fig = document.querySelector(".figure-wrap .ph, .collage");
-  if (!el || !fig) return;
-  let size = parseFloat(getComputedStyle(el).fontSize);
-  while (fig.getBoundingClientRect().height < minFigure && size > minPx) {
-    size -= 1; el.style.fontSize = size + "px";
-  }
-}
-function fitHits() {
-  const hits = [...document.querySelectorAll(".hits .t")], rows = [...document.querySelectorAll(".hits li")];
-  const foot = document.querySelector(".swipe"), slide = document.querySelector(".slide");
-  if (!hits.length || !foot) return;
-  const limit = slide.getBoundingClientRect().bottom - parseFloat(getComputedStyle(slide).paddingBottom);
-  let size = parseFloat(getComputedStyle(hits[0]).fontSize);
-  while (foot.getBoundingClientRect().bottom > limit + 1 && size > 20) {
-    size -= 1;
-    hits.forEach(h => h.style.fontSize = size + "px");
-    rows.forEach(r => { r.style.paddingTop = r.style.paddingBottom = Math.max(8, size * 0.5) + "px"; });
-  }
-}
+const q = s => document.querySelector(s), qa = s => [...document.querySelectorAll(s)];
+const fits = el => el.scrollHeight <= el.clientHeight + 1;
+
 window.__layout = async () => {
   await document.fonts.ready;
   await Promise.all([...document.images].map(img => img.decode().catch(() => {})));
-  fitLines(document.querySelector(".hook"), 2.2, 56);
-  fitLines(document.querySelector(".headline"), 3, 46);
-  fitLines(document.querySelector(".summary"), 5, 27);
-  fitLines(document.querySelector(".why"), 2, 20);
-  document.querySelectorAll(".fb-word").forEach(el => fitLines(el, 3, 48));
-  document.querySelectorAll(".hits .t").forEach(el => fitLines(el, 2, 22));
-  fitLines(document.querySelector(".follow .ask"), 2, 26);
-  fitLines(document.querySelector(".follow .share"), 2, 20);
-  fitLines(document.querySelector(".swipe .row > span:first-child"), 1, 16);
-  fitSlide(document.querySelector(".summary"), 26, {{ min_figure }});
-  fitSlide(document.querySelector(".headline"), 44, {{ min_figure }});
-  fitHits();
+  // cover
+  fitLines(q(".hook"), 3, 60);
+  shrinkUntil([q(".hook")], 60, () => q(".cover-body") && q(".cover-body").getBoundingClientRect().top >= {{ cover_min_photo }});
+  // story
+  fitLines(q(".headline"), 3, 44);
+  // bullets share one size so the slide reads evenly; none may run past 3 lines
+  const points = qa(".points li"), lines = el => el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight);
+  shrinkUntil(points, 25, () => points.every(li => lines(li) <= 3.2));
+  fitLines(q(".why p"), 2, 22);
+  fitLines(q(".next .tease"), 1, 20);
+  fitWidth(q(".sticker b"), 34);
+  fitLines(q(".sticker span"), 2, 18);
+  const media = q(".slide-story .media");
+  if (media) {
+    shrinkUntil([...qa(".points li"), q(".why p")], 23, () => media.getBoundingClientRect().height >= {{ min_media }});
+    shrinkUntil([q(".headline")], 40, () => media.getBoundingClientRect().height >= {{ min_media }} && q(".over").getBoundingClientRect().top >= 170);
+  }
+  // numbers
+  qa(".stats .num").forEach(el => fitWidth(el, 40));
+  qa(".stats .lbl b").forEach(el => fitLines(el, 2, 22));
+  if (q(".stats")) shrinkUntil([...qa(".stats .num"), ...qa(".stats .lbl b")], 22, () => fits(q(".slide")));
+  // wrap
+  qa(".hits .t").forEach(el => fitLines(el, 2, 22));
+  fitLines(q(".cta .ask"), 3, 28);
+  fitLines(q(".cta .share"), 2, 20);
+  if (q(".hits")) shrinkUntil([...qa(".hits .t")], 20, () => fits(q(".slide")));
+  if (q(".hits")) shrinkUntil([q(".cta .ask"), q(".cta .share")], 20, () => fits(q(".slide")));
   return true;
 };
 </script>

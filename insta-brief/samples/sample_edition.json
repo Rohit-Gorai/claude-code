@@ -1,71 +1,130 @@
 {
   "_note": "Illustrative sample for previewing the template. Stories and images are placeholders, not real news.",
-  "cover": {"hook_accent": "Today's biggest headlines", "hook_rest": "in 60 seconds"},
+  "cover": {
+    "hook_accent": "Your SIPs",
+    "hook_rest": "just hit a record high"
+  },
   "stories": [
     {
       "category": "MONEY",
+      "emotion": "USEFUL",
       "headline": "Stock Markets Hit a Record High as Investors Pour Back In",
       "highlight": "Stock Markets",
+      "tease": "",
       "summary": "Share prices closed at an all-time high after three straight weeks of gains. Banks and IT companies led the rally as overseas investors returned. Analysts warn the run could cool if oil prices rise again.",
       "why_it_matters": "Your SIPs and mutual funds are likely up this month.",
       "alt_text": "Glowing green stock chart climbing to a record high.",
-      "sources": ["Sample Wire", "Business Desk"],
-      "images": ["samples/images/markets.svg"],
-      "credit": "Source: Sample Wire  ·  Illustration"
+      "sources": [
+        "Sample Wire",
+        "Business Desk"
+      ],
+      "images": [
+        "samples/images/markets.svg"
+      ],
+      "credit": "Source: Sample Wire  ·  Illustration",
+      "stat": "3 wks",
+      "stat_label": "of straight gains"
     },
     {
       "category": "SCIENCE",
+      "emotion": "AWE",
       "headline": "New Space Telescope Spots Signs of Water on a Distant Planet",
       "highlight": "New Space Telescope",
+      "tease": "What a telescope just spotted",
       "summary": "Astronomers say the telescope picked up water vapour in the air of a planet about 120 light-years away. It is one of the clearest readings yet, and the team plans follow-up observations next year.",
       "why_it_matters": "It narrows the hunt for worlds that could support life.",
       "alt_text": "Rocket climbing through a starry sky above Earth.",
-      "sources": ["Sample Science"],
-      "images": ["samples/images/space.svg"],
-      "credit": "Source: Sample Science  ·  Illustration"
+      "sources": [
+        "Sample Science"
+      ],
+      "images": [
+        "samples/images/space.svg"
+      ],
+      "credit": "Source: Sample Science  ·  Illustration",
+      "stat": "120",
+      "stat_label": "light-years away"
     },
     {
       "category": "SPORTS",
+      "emotion": "PRIDE",
       "headline": "Underdogs Chase Down 320 to Win a Thrilling Series Decider",
       "highlight": "Underdogs",
+      "tease": "The chase nobody saw coming",
       "summary": "Needing 320 to win, the visitors got home with two balls to spare after a record sixth-wicket stand. It is their first series win away from home in eleven years.",
       "why_it_matters": "",
       "alt_text": "Floodlit cricket stadium at night with a packed crowd.",
-      "sources": ["Sample Sports"],
-      "images": ["samples/images/cricket.svg"],
-      "credit": "Source: Sample Sports  ·  Illustration"
+      "sources": [
+        "Sample Sports"
+      ],
+      "images": [
+        "samples/images/cricket.svg"
+      ],
+      "credit": "Source: Sample Sports  ·  Illustration",
+      "stat": "320",
+      "stat_label": "runs chased down"
     },
     {
       "category": "CLIMATE",
+      "emotion": "USEFUL",
       "headline": "Monsoon Arrives a Week Early, Farmers Brace for Sowing Season",
       "highlight": "Monsoon",
+      "tease": "Why farmers are smiling today",
       "summary": "The weather office says rains reached the coast seven days ahead of schedule. Early showers help farmers plant on time, but officials say the next two weeks will decide how good the harvest is.",
       "why_it_matters": "Good rains usually mean cheaper vegetables later in the year.",
       "alt_text": "Red umbrella in heavy rain over green fields.",
-      "sources": ["Sample Weather Desk"],
+      "sources": [
+        "Sample Weather Desk"
+      ],
       "images": [],
-      "credit": "Source: Sample Weather Desk"
+      "credit": "Source: Sample Weather Desk",
+      "stat": "7 days",
+      "stat_label": "ahead of schedule"
     },
     {
       "category": "TECH",
+      "emotion": "SURPRISE",
       "headline": "Electric Buses Now Outnumber Diesel Ones in Three Big Cities",
       "highlight": "Electric Buses",
+      "tease": "The bus quietly taking over",
       "summary": "City transport data shows e-buses make up more than half of the fleet in three metros. Operators say running costs are about 40% lower, and 2,000 more buses are on order.",
       "why_it_matters": "Cleaner air and quieter streets on your daily commute.",
       "alt_text": "Green electric bus driving through a city at dusk.",
-      "sources": ["Sample Transport Desk"],
-      "images": ["samples/images/city.svg"],
-      "credit": "Source: Sample Transport Desk  ·  Illustration"
+      "sources": [
+        "Sample Transport Desk"
+      ],
+      "images": [
+        "samples/images/city.svg"
+      ],
+      "credit": "Source: Sample Transport Desk  ·  Illustration",
+      "stat": "40%",
+      "stat_label": "lower running costs"
     }
   ],
   "quick_hits": [
-    {"text": "Fuel prices unchanged for the 30th straight day"},
-    {"text": "New metro line opens to the public this weekend"},
-    {"text": "Popular chat app adds voice-note transcripts for everyone"},
-    {"text": "Board exam dates announced, results expected in May"},
-    {"text": "Record 1.2 crore passengers flew in a single month"}
+    {
+      "text": "Fuel prices unchanged for the 30th straight day"
+    },
+    {
+      "text": "New metro line opens to the public this weekend"
+    },
+    {
+      "text": "Popular chat app adds voice-note transcripts for everyone"
+    },
+    {
+      "text": "Board exam dates announced, results expected in May"
+    },
+    {
+      "text": "Record 1.2 crore passengers flew in a single month"
+    }
   ],
   "caption_hook": "Markets at a record, water on a far-off planet and a last-over thriller 👇",
-  "engagement_question": "Would you switch to an electric bus for your commute?",
-  "hashtags": ["#news", "#india", "#headlines", "#dailybrief"]
+  "engagement_question": "Electric buses in your city: yes or no? Why?",
+  "share_line": "Send this to the friend who checks the Sensex daily",
+  "hashtags": [
+    "#stockmarket",
+    "#monsoon",
+    "#space",
+    "#cricket",
+    "#india"
+  ]
 }

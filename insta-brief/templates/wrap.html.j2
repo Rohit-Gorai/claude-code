@@ -1,26 +1,23 @@
 {% extends "base.html.j2" %}
 {% block body %}
-  <h1 class="hook"><span class="line accent">Quick hits</span><span class="line">before you go</span></h1>
-  <div class="rule2"></div>
-  <ol class="hits">
-    {% for h in quick_hits %}<li><span class="n">{{ "%02d" % loop.index }}</span><span class="t">{{ h.text }}</span></li>{% endfor %}
-  </ol>
-  <div class="follow">
-    {% if question %}
-    <div class="kicker">Your take? Tell us in the comments</div>
-    <div class="ask">{{ question }}</div>
-    {% else %}
-    <div class="kicker">Never miss a headline</div>
-    <div class="handle">{{ brand.handle }}</div>
-    <div class="tag">{{ brand.tagline }}</div>
-    {% endif %}
-    {% if share_line %}<div class="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M22 3 2 10.5l8 3 3 8z"/><path d="m22 3-12 10.5"/></svg>{{ share_line }}</div>{% endif %}
-    <div class="actions">
-      <span class="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4.5L6 21z"/></svg>Save</span>
-      <span class="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M22 3 2 10.5l8 3 3 8z"/><path d="m22 3-12 10.5"/></svg>Share</span>
-      <span class="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-3.9 3.1-7 7-7s7 3.1 7 7M19 8v6M16 11h6"/></svg>Follow{{ " " ~ brand.handle if question }}</span>
+  <div class="wrap">
+    <h1 class="title"><mark>Quick hits</mark><br>before you go</h1>
+    <ol class="hits">
+      {% for h in quick_hits %}<li><span class="n">{{ loop.index }}</span><span class="t">{{ h.text }}</span></li>{% endfor %}
+    </ol>
+    <div class="cta">
+      {% if question %}
+      <div class="kicker">Your take</div>
+      <div class="ask">{{ question }}</div>
+      {% else %}
+      <div class="kicker">Never miss a headline</div>
+      <div class="ask">{{ brand.tagline }}</div>
+      {% endif %}
+      {% if share_line %}<div class="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M22 3 2 10.5l8 3 3 8z"/><path d="m22 3-12 10.5"/></svg>{{ share_line }}</div>{% endif %}
+      <div class="follow">
+        <span class="btn">Follow {{ brand.handle }}</span>
+        {% if brand.schedule %}<span class="when">New brief daily<br>{{ brand.schedule }}</span>{% endif %}
+      </div>
     </div>
   </div>
 {% endblock %}
-{% block swipe %}That's your brief for now{% endblock %}
-{% block arrows %}See you soon{% endblock %}

@@ -201,6 +201,86 @@ class PipelineTest(unittest.TestCase):
         self.assertFalse([w for w in warnings if w.split(":")[0] in ("STOP", "SWIPE", "SHARE")])
         self.assertEqual(edition["stories"][1]["tease"], "The record nobody expected")
 
+    def test_virality_signals(self):
+        from brief.virality import signals
+
+        money, flags = signals("Petrol prices cut by ₹2 a litre from tomorrow")
+        self.assertGreater(money, 1)
+        self.assertIn("money", flags)
+        self.assertIn("numbers", flags)
+        politics, flags = signals("BJP and Congress trade barbs ahead of assembly elections")
+        self.assertLess(politics, 0)
+        self.assertIn("political", flags)
+        grim, flags = signals("Veteran actor dies at 84, industry mourns")
+        self.assertIn("grim", flags)
+        self.assertLess(grim, money)
+        wow, flags = signals("ISRO spots water on the Moon for the first time")
+        self.assertIn("wow", flags)
+
+    def test_candidates_carry_virality(self):
+        rbi = self.candidates[0]
+        self.assertIn("money", rbi["flags"])
+        self.assertIn("numbers", rbi["flags"])
+        self.assertGreater(rbi["viral"], 0)
+        for c in self.candidates:
+            self.assertIn("viral", c)
+
+    def test_summary_becomes_bullets(self):
+        from brief.editor import bullets
+
+        self.assertEqual(
+            bullets("The U.S. Senate voted 52-48. Dr. Rao said rates of 5.25% will hold. Next steps come in Oct. and Nov."),
+            ["The U.S. Senate voted 52-48.", "Dr. Rao said rates of 5.25% will hold.", "Next steps come in Oct. and Nov."],
+        )
+        self.assertEqual(len(bullets("One. Two. Three. Four.")), 3)
+
+    def test_stats_feed_the_numbers_slide(self):
+        from brief.render import plan_slides
+
+        ids = [c["id"] for c in self.candidates[:2]]
+        base = {"category": "MONEY", "headline": "RBI Cuts Rate", "highlight": "RBI", "summary": "x",
+                "why_it_matters": "", "alt_text": "a", "tease": "Why it matters"}
+        raw = {"stories": [{**base, "candidate_id": ids[0], "stat": "25 bps", "stat_label": "repo rate cut", "emotion": "useful"},
+                           {**base, "candidate_id": ids[1], "stat": "much too long a stat", "stat_label": "x", "emotion": "SAD"}],
+               "quick_hits": [{"candidate_id": self.candidates[2]["id"], "text": "Hit"}]}
+        edition, warnings = finalize(raw, self.candidates, self.cfg)
+        self.assertEqual(edition["stories"][0]["stat"], "25 bps")
+        self.assertEqual(edition["stories"][0]["emotion"], "USEFUL")
+        self.assertEqual(edition["stories"][1]["stat"], "")
+        text = " | ".join(warnings)
+        self.assertIn("max 8", text)
+        self.assertIn("SAVE: only 1 stories have a stat", text)
+        self.assertIn("FEEL: no AWE / JOY / PRIDE story", text)
+        kinds = [k for k, _, _ in plan_slides(edition)]
+        self.assertEqual(kinds, ["cover", "story1", "story2", "quickhits"])
+
+        for s in edition["stories"]:
+            s["stat"] = "3x"
+        edition["stories"].append({**edition["stories"][0], "rank": 3})
+        kinds = [k for k, _, _ in plan_slides(edition)]
+        self.assertEqual(kinds, ["cover", "story1", "story2", "story3", "numbers", "quickhits"])
+        last_story = plan_slides(edition)[3][2]
+        self.assertEqual(last_story["next_text"], "Today in numbers")
+
+    def test_engagement_bait_is_flagged(self):
+        cid = self.candidates[0]["id"]
+        story = {"candidate_id": cid, "category": "MONEY", "headline": "RBI Cuts Rate", "highlight": "RBI",
+                 "summary": "x", "why_it_matters": "", "alt_text": "a"}
+        _, warnings = finalize({"stories": [story], "engagement_question": "Comment YES if your EMI falls",
+                                "share_line": "Tag a friend with a home loan"}, self.candidates, self.cfg)
+        self.assertEqual(sum("engagement bait" in w for w in warnings), 2)
+        _, warnings = finalize({"stories": [story], "engagement_question": "Rate cut: good news or too late? Why?",
+                                "share_line": "Send this to the friend with a home loan"}, self.candidates, self.cfg)
+        self.assertFalse(any("bait" in w for w in warnings))
+
+    def test_long_summary_sentence_warns(self):
+        cid = self.candidates[0]["id"]
+        long = " ".join(["word"] * 30) + "."
+        story = {"candidate_id": cid, "category": "MONEY", "headline": "RBI Cuts Rate", "highlight": "RBI",
+                 "summary": long, "why_it_matters": "", "alt_text": "a"}
+        _, warnings = finalize({"stories": [story]}, self.candidates, self.cfg)
+        self.assertTrue(any("30-word sentence" in w for w in warnings))
+
 
 if __name__ == "__main__":
     unittest.main()

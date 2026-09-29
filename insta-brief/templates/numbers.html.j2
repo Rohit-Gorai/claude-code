@@ -1,0 +1,20 @@
+{% extends "base.html.j2" %}
+{% block body %}
+  <div class="numbers">
+    <div class="kicker"><span class="pulse"></span>Save-worthy</div>
+    <h1 class="title">Today in <mark>numbers</mark></h1>
+    <ol class="stats">
+      {% for s in stats %}
+      <li>
+        <span class="num">{{ s.stat }}</span>
+        <span class="lbl"><em>{{ s.category }}</em><b>{{ s.stat_label or s.headline }}</b></span>
+      </li>
+      {% endfor %}
+    </ol>
+    <div class="save-cue">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M6 3h12v18l-6-4.5L6 21z"/></svg>
+      <span>Save this so you remember it</span>
+      <span class="handle">{{ brand.handle }}</span>
+    </div>
+  </div>
+{% endblock %}

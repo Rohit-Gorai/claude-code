@@ -1,14 +1,15 @@
 # b.rief: an automatic Instagram news carousel
 
 Every morning this tool reads 20 news feeds, finds the stories everyone is covering, has Claude write
-catchy (but accurate) slide copy, and renders a ready-to-post carousel in the *Brand Bulletin*
-newspaper style: cover, 5 stories, a quick-hits slide, a caption, and alt text.
+catchy (but accurate) slide copy, and renders a ready-to-post 8-slide carousel in b.rief's own
+photo-first design: cover, 5 stories, "Today in numbers", quick hits, a caption, and alt text.
 
 ![Sample carousel](samples/preview/contact_sheet.jpg)
 
 *The sample above uses placeholder stories and illustrations. Real editions use today's news and photos.*
 
 - **Design breakdown:** [TEMPLATE.md](TEMPLATE.md)
+- **What makes posts travel (research + sources):** [VIRALITY.md](VIRALITY.md)
 - **How to grow the page:** [PLAYBOOK.md](PLAYBOOK.md)
 
 ---
@@ -81,16 +82,22 @@ python -m brief guide     # prints the editorial rules + edition.json schema
    become one story with 2 sources.
 3. **Score** each story. The score goes up with how many outlets cover it, how many related articles
    Google groups with it, how fresh it is, whether it's in a top-stories feed, and whether it has a photo.
+   A **virality signal** (`brief/virality.py`) then nudges shareable topics up (your money, records and
+   space, India pride, famous names, surprises) and political or grim ones down. See [VIRALITY.md](VIRALITY.md).
 4. **Enrich** the top 24 by opening the articles to get the lead photo and a few paragraphs of real text.
-5. **Edit.** Claude picks 5 stories plus 5 quick hits with a category mix and puts the strongest story
-   on slide 2. It writes headline, red highlight, summary, "why it matters", caption hook, question and hashtags.
+5. **Edit.** Claude picks 5 stories plus 5 quick hits with a category mix and puts the most shareable,
+   non-political story on slide 2. It writes headline, red highlight, a 2-3 sentence summary (shown as
+   bullets), "why it matters", the key stat, a teaser for the next slide, caption hook, question, share
+   line and hashtags, and tags each story's emotion so `check` can test the edition's arc.
    The rules it follows are in `brief/editor.py` (`GUIDE`). Tweak the voice there.
 
 ## Customise
 
-- **Brand:** `config.yaml → brand` (name, logo, handle, tagline, colours). `assets/logo.png` is the masthead;
+- **Brand:** `config.yaml → brand` (name, logos, handle, tagline, posting schedule, colours).
+  `assets/logo.png` is used on the light slide, `assets/logo-white.png` on photos;
   `assets/profile_picture.jpg` is a ready-made Instagram profile picture.
-- **Size:** `format.height: 1440` (3:4, Instagram's grid) or `1350` (4:5).
+- **Size:** `format.height: 1440` (3:4, fills the grid when you post by hand) or `1350` (4:5, needed by
+  scheduling tools).
 - **Length:** `format.stories` (up to 18, since Instagram allows 20 slides), `format.quick_hits`.
 - **Feeds:** add/remove under `news.feeds`. Any RSS/Atom URL works. `top: true` marks top-stories feeds.
   For a global page, swap `hl=en-IN&gl=IN&ceid=IN:en` for `hl=en-US&gl=US&ceid=US:en`.
@@ -105,8 +112,8 @@ copyright claims can get an Instagram account restricted. Safer options:
 
 - Official handouts, press-kit images, government/PIB, ISRO, team and company press photos.
 - Wikimedia Commons / Unsplash / Pexels images that allow reuse (credit them).
-- The built-in **typographic card**: remove a story's `images` in `edition.json` (set it to `[]`)
-  and re-render. It looks intentional (see slide #4 in the sample).
+- The built-in **designed card**: remove a story's `images` in `edition.json` (set it to `[]`)
+  and re-render. It looks intentional (see slide 5 in the sample).
 
 ## Automate it
 

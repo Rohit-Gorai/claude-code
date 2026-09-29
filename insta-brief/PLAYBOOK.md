@@ -51,10 +51,40 @@ rushed posts a day for two weeks.
 
 ## 3. What Instagram rewards, and how the template uses it
 
-Every carousel is built on one formula, **STOP → SWIPE → FEEL → SHARE**:
+The full research, with sources, is in [VIRALITY.md](VIRALITY.md). Every carousel is built on one
+formula, **STOP → SWIPE → FEEL → SHARE**:
 
 | Step | On the post | Why it works |
 |---|---|---|
+| **Stop** | Cover = story #1's photo (ideally a face) with a 5-8 word hook on a red marker, "Also inside" thumbnails and a **Swipe →** button | The cover is all a stranger sees in Explore and the feed |
+| **Swipe** | Progress bar and `2/8` counter on every slide; each story ends on a **Next** bar teasing the next one; stat stickers on the photos | Open loops keep people swiping, and time spent tells Instagram the post is worth showing |
+| **Feel** | Awe, useful, surprise and pride stories; at most one sad story; end on a high | High-arousal emotions (awe, anger, anxiety) get shared; sadness doesn't |
+| **Share** | "Today in numbers" to save; the last slide asks a real question (opinion + reason) and names who to send the post to | Saves and DM sends are the strongest ranking signals; bait like "comment YES" is demoted |
+
+- **Sends (shares by DM) and saves** are the strongest signals: sends count roughly 3-5x a like. That's
+  why the editor picks stories with a *send test* (would you forward this to a friend or the family
+  group?), why every story has a *Why it matters* line and why the numbers slide exists.
+- **Originality.** Since 30 April 2026 Instagram stops recommending carousels from accounts that mostly
+  repost others' content. b.rief's design is its own and every story is re-told in its own words
+  with its own stats and takeaway. Never post a publisher's graphic or screenshot as-is.
+- **Politics isn't recommended.** Instagram doesn't show posts about politics, governments,
+  elections or protests to people who don't follow you (unless they change their settings). So the
+  cover and story #1 are always non-political; political stories go further back in the carousel.
+- **8-10 slides.** Carousels under 4 slides do barely better than a single photo. b.rief posts 8.
+- **The second chance.** If someone scrolls past, Instagram may show the carousel again starting on
+  slide 2. So story #1 (slide 2) is always the most shareable story, and its slide works as a cover.
+- **No engagement bait.** "Comment YES", "tag 3 friends" and "like if" are demoted. Ask a question
+  people want to answer with a reason; detailed comments count far more than one-word ones.
+- **Search, not hashtags.** Instagram search (and Google, for public professional accounts) reads the
+  caption's first line, your name field and alt text. Keep captions keyword-rich (the tool lists every
+  headline), fill in alt text, and use only 3-5 specific hashtags. Put "News" in your profile name
+  (e.g. *b.rief · Daily News*).
+- **Music on carousels.** Adding a trending track makes the carousel eligible for more surfaces.
+  Add it in the app when posting.
+- **3:4 format** fills the new profile grid and the feed completely when you post by hand. Scheduling
+  tools reject 3:4: switch to 4:5 (`format.height: 1350`) if you schedule.
+
+---|---|---|
 | **Stop** | A concrete cover hook about the most shareable story (a number, a name, a stake), with a face | The cover is all a stranger sees in Explore and the feed |
 | **Swipe** | Every story slide ends with *Next: …*, a teaser for the next story | Open loops keep people swiping, and time spent tells Instagram the post is worth showing |
 | **Feel** | Shareable lead, a "your money" story early, the feel-good story last | A post that is all bad news gets read, but a post that ends on a high gets shared |

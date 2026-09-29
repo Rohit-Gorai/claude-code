@@ -1,82 +1,81 @@
 # The template, dissected
 
-Your reference is *The Brand Bulletin* by @btswithbrands. Here is what makes it work, and how
-**b.rief** keeps that DNA while being built for people who just want the headlines.
+b.rief's look is its own: a photo-first **story card**, designed around how Instagram ranks
+carousels (see [VIRALITY.md](VIRALITY.md)). It no longer borrows the newspaper layout of the page
+that inspired the project: no masthead, dateline bar, double rules or crumpled paper.
 
 ![Sample carousel](samples/preview/contact_sheet.jpg)
 
-## 1. What the reference does
+## 1. Design principles
 
-| Element | What it is | Why it works |
+| Principle | How the template does it | Why |
 |---|---|---|
-| **Canvas** | 3:4 portrait (1080×1440) on off-white crumpled paper | 3:4 fills Instagram's grid and feed with no cropping. The paper texture says "newspaper" before anyone reads a word. |
-| **Masthead** | Bold serif title in deep red, centred | Same on every slide, so the brand is recognisable at thumbnail size and in the grid. |
-| **Dateline bar** | Charcoal strip: page name left, date right | Borrowed from real newspapers. It makes the post feel *current* and official. |
-| **Two-tone headline** | Heavy geometric sans. The hook words in red, the rest in charcoal | The eye lands on the red words first, which gives you the story in 2–3 words. |
-| **Double rule** | Thick line plus thin line | Newspaper section divider. It separates "headline" from "picture". |
-| **Picture block** | Cover: one big hero image plus two small ones. Story: one wide image | The cover collage teases several stories at once, which pushes people to swipe. |
-| **`#1` badge** | White box, red number, pinned bottom-left of the image | Ranking makes it a countdown, and the number tells you where you are in the carousel. |
-| **Italic serif body** | ~40 words, centred, under the image | Short enough to read in 5 seconds. The italic serif reads as "the story" in contrast to the loud headline. |
-| **Swipe cue** | Italic caps `SWIPE TO KNOW  >>` under a double rule | An explicit call to action. Swipes are a strong engagement signal. |
+| **Stop the scroll** | Cover = story #1's photo edge to edge, a 5-8 word hook in 100px type, the key words on a red marker | The cover is judged in under a second in a busy feed. Big type on a face or a strong photo is the pattern that makes people stop. |
+| **Promise more** | Story-style progress bar + `1/8` counter on every slide; "Also inside" thumbnails of stories 2-5 on the cover; a red **Swipe →** button | People swipe when they can see there is more, and what it is. Swipes and time spent are what Instagram measures. |
+| **Slide 2 stands alone** | Every story slide opens with the photo and a white headline on it, with its own number and category | Instagram re-shows slide 2 to people who skipped the cover, so story #1 is a second cover. |
+| **Readable in 5 seconds** | 2-3 bullet points (the summary's sentences), then a white **Why it matters to you** card | Bullets are faster to scan than a paragraph. The "why it matters" line is what people save and forward. |
+| **Always an open loop** | A dark **Next** bar at the bottom of each story teases the next one ("Next: why your portfolio is red again") | A question the next slide answers is the strongest swipe cue there is. |
+| **Numbers are the sticker** | A tilted white sticker with the story's key number on the photo (`₹5L cr / wiped out in 30 min`) | Numbers stop the eye, and they are what people quote when they share. |
+| **Something worth saving** | A dark **Today in numbers** slide lists the edition's stats | A recap people screenshot or save. Saves are a ranking signal. |
+| **End with a job** | A quick-hits list, then a dark card: a real question, who to send it to, **Follow** and the posting times | The last slide asks for comments with a reason, sends and the follow at the moment readers are most satisfied. |
+| **Branded, every slide** | Logo top left, @handle in the footer | Screenshots and forwards keep the brand attached, and the look is recognisable in the grid. |
 
-## 2. b.rief's slide system
+## 2. The slides
 
 ```
-┌──────────────────────────────────────────┐  1080 × 1440  (3:4)
-│                 b.rief                   │  masthead · your logo (assets/logo.png) · 96px tall
-│ ▓ YOUR DAILY BRIEF · No. 012  27 SEPT ▓ │  dateline bar · 58px · Crimson Pro caps
-│                                          │
-│   Stock Markets Hit a Record             │  headline · Poppins 700 · 70px · ≤3 lines
-│   High as Investors Pour Back In         │  (hook words in red, auto-shrinks to fit)
-│ ┌──────────────────────────────────────┐ │
-│ │ MONEY                                │ │  category chip
-│ │                                      │ │
-│ │            photo (flexes)            │ │  fills whatever space the text leaves
-│ │                                      │ │  (typographic card if there's no photo)
-│ │ #1                                   │ │  rank badge
-│ └──────────────────────────────────────┘ │
-│                  Source: The Hindu, Mint │  credit · builds trust
-│   Share prices closed at an all-time     │  summary · Crimson Pro italic · 36px · ≤5 lines
-│   high after three straight weeks...     │
-│   WHY IT MATTERS Your SIPs are up.       │  the takeaway · Poppins 600 · red label
-│ ════════════════════════════════════════ │  double rule
-│ NEXT: WHAT SPARKED THE SHUTDOWN       >> │  teaser for the next story
+┌──────────────────────────────────────────┐  1080 × 1440 (3:4)
+│ ▬▬ ▬▬ ▬▬ ▬▬ ▬▬ ▬▬ ▬▬ ▬▬                 │  progress bar: done / current (red) / to come
+│ b.rief                              2/8  │  white logo · counter
+│                          ┌────────────┐  │
+│                          │ ₹5L cr     │  │  stat sticker (optional)
+│         photo            │ wiped out… │  │
+│      (flexes, ≥600px)    └────────────┘  │
+│ [02] [MONEY]                             │  rank + category
+│ Sensex Slides Again: ▇Over ₹5 Lakh▇      │  headline · Poppins 800 · 66px · white on the photo
+│ ▇Crore Gone▇ in 30 Minutes               │  highlight = red marker
+├──────────────────────────────────────────┤
+│ ■ By 9:46 AM the Sensex was down 595…    │  bullets · Poppins 500 · 30px · one per sentence
+│ ■ Listed firms lost over ₹5 lakh crore.  │
+│ ■ The rupee opened at 96 a dollar.       │
+│ ┃ WHY IT MATTERS TO YOU                  │  white card, red edge
+│ ┃ Costlier oil is dragging your portfolio│
+│ @b.rief · Source: … · Image: …           │  watermark + credit
+│ [NEXT] Why your younger cousin…       →  │  dark "Next" bar
 └──────────────────────────────────────────┘
 ```
 
-**Carousel order (7 slides by default):**
+**Carousel order (8 slides by default):**
 
-1. **Cover.** Two-line hook (red + charcoal), a collage of stories #1–#3 with rank badges, and `SWIPE TO KNOW`.
-2. **Story #1.** Your strongest story. Instagram re-shows a carousel's *second* slide to people who
-   scrolled past the first, so this slide gets a second chance at every viewer.
-3. **Stories #2–#5.** One story per slide, same layout every time, so the page trains the reader's eye.
-4. **Quick hits + follow card.** Five one-line headlines for headline lovers, then a charcoal card
-   with your handle and `SAVE · SHARE · FOLLOW`. Readers see it when they're most satisfied, which is
-   the best moment to ask for the follow.
+1. **Cover.** Story #1's photo, a kicker pill (`29 SEP · 5 STORIES · 60 SEC`), the hook with a red
+   marker, "Also inside" thumbnails for stories 2-5, `@b.rief` and a red **Swipe →** button.
+2. **Story #1.** The most shareable story. Works as a second cover.
+3. **Stories #2-#5.** Same layout every time, so the page trains the reader's eye. The last story's
+   Next bar points to the numbers slide.
+4. **Today in numbers.** Built automatically when at least 3 stories have a `stat`: each number
+   big (alternating red and white), with its category and label.
+5. **Quick hits + your take.** Five numbered one-liners, then the question, the share line,
+   **Follow @b.rief** and "New brief daily · 10 AM · 2 PM · 6 PM · 10 PM".
 
-## 3. What was kept, and what was added
+With fewer than 3 stats the numbers slide is skipped (7 slides) and `check` says so.
 
-**Kept from the reference:** masthead, dateline bar, red/charcoal two-tone headlines, double rules,
-white `#N` badge on the image, italic serif body, swipe cue, crumpled paper, 3:4.
+## 3. Details that keep it working every day
 
-**Added for a headlines page:**
-
-- **Edition number** (`No. 012`) in the dateline. It builds a daily ritual, and people like to collect a numbered series.
-- **Category chip** on every photo (MONEY, TECH, SPORTS…) so people can tell what a story is about at a glance.
-- **"Why it matters" line.** The one-sentence takeaway is what makes people save and forward the post.
-- **Source credit** under every image. On a news page, trust is what keeps followers.
-- **Quick hits slide.** You get five more headlines without making the carousel longer.
-- **Follow card** on the last slide, which turns satisfied readers into followers.
-- **Typographic fallback card.** When there's no photo you can safely use, the story still looks
-  designed (see slide #4 in the sample) and you take no copyright risk.
-- **Self-fitting text.** Headlines and summaries shrink to fit, and the photo absorbs the leftover
-  space, so no slide ever overflows.
+- **Self-fitting text.** Headlines, bullets, stats and the last-slide copy shrink to fit. The photo
+  never gets smaller than 600px (540px at 4:5), and bullets on one slide always share one size.
+- **No photo? A designed card.** A dark card with a red glow and the category in giant outline
+  letters, so a missing photo still looks deliberate and carries no copyright risk.
+- **White logo on photos, dark logo on the light slide.** `assets/logo-white.png` is generated
+  from `assets/logo.png` (red dot kept). Replace both if you change the logo.
+- **One font family.** Poppins 500-900 (OFL licence, bundled), so the page looks consistent in the grid.
 
 ## 4. Changing the look
 
-Everything visual lives in two places:
+- `config.yaml` → `brand`: name, logos, handle, tagline, posting `schedule`, `colors`
+  (`paper` reading panel, `ink` text, `accent` red, `dark` bars and cards).
+- `config.yaml` → `format`: size and number of stories.
+- `templates/style.css` for sizes and spacing; `templates/*.html.j2` for each slide's structure
+  (`cover`, `story`, `numbers`, `wrap`; `base` holds the progress bar, logo and auto-fit script).
 
-- `config.yaml` → `brand` (name, handle, colours) and `format` (size, number of stories).
-- `templates/style.css` for fonts, sizes and spacing. `templates/*.html.j2` hold the slide structures.
-
-To switch to 4:5, set `format.height: 1350`. The photo area shrinks and everything else stays the same.
+**3:4 or 4:5?** 1080×1440 (3:4) fills Instagram's profile grid edge to edge when you post by hand,
+but scheduling tools reject it. If you schedule posts, set `format.height: 1350` (4:5): the photo
+area shrinks and everything else stays the same.

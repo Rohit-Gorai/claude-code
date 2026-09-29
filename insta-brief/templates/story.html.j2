@@ -1,16 +1,21 @@
 {% extends "base.html.j2" %}
 {% block body %}
-  <h2 class="headline">{{ story.hl_before }}<span class="hl">{{ story.hl_text }}</span>{{ story.hl_after }}</h2>
-  <div class="figure-wrap">
-    <div class="ph">
-      {% if story.image_file %}<img src="{{ story.image_file }}" style="object-position: {{ story.image_position or 'center 30%' }}">
-      {% else %}<div class="fallback"><div class="fb-word">{{ story.fallback_word }}</div></div>{% endif %}
-      {% if story.category %}<div class="chip">{{ story.category }}</div>{% endif %}
-      <div class="badge">#{{ story.rank }}</div>
+  <div class="media">
+    {% if story.image_file %}<img class="photo" src="{{ story.image_file }}" style="object-position: {{ story.image_position or 'center 30%' }}">
+    {% else %}<div class="fallback"><span class="fb-word">{{ story.category }}</span></div>{% endif %}
+    <div class="shade"></div>
+    {% if story.stat %}<div class="sticker"><b>{{ story.stat }}</b>{% if story.stat_label %}<span>{{ story.stat_label }}</span>{% endif %}</div>{% endif %}
+    <div class="over">
+      <div class="tags"><span class="rank">{{ "%02d" % story.rank }}</span>{% if story.category %}<span class="cat">{{ story.category }}</span>{% endif %}</div>
+      <h2 class="headline">{{ story.hl_before }}<mark>{{ story.hl_text }}</mark>{{ story.hl_after }}</h2>
     </div>
-    {% if story.credit %}<div class="credit">{{ story.credit }}</div>{% endif %}
   </div>
-  <p class="summary">{{ story.summary }}</p>
-  {% if story.why_it_matters %}<p class="why"><span class="label">Why it matters</span>{{ story.why_it_matters }}</p>{% else %}<div style="height:22px"></div>{% endif %}
+  <div class="panel">
+    <ul class="points">{% for b in bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+    {% if story.why_it_matters %}<div class="why"><span class="label">Why it matters to you</span><p>{{ story.why_it_matters }}</p></div>{% endif %}
+    <div class="foot">
+      <div class="credit"><b>{{ brand.handle }}</b>{% if story.credit %} · {{ story.credit }}{% endif %}</div>
+      <div class="next"><span class="lbl">{{ next_label }}</span><span class="tease">{{ next_text }}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    </div>
+  </div>
 {% endblock %}
-{% block swipe %}{% if next_tease %}<span class="next">Next:</span> {{ next_tease }}{% else %}{{ 'Swipe for quick hits' if last else 'Swipe for the next' }}{% endif %}{% endblock %}

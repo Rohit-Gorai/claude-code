@@ -23,7 +23,17 @@
       ],
       "credit": "Source: Sample Wire  ·  Illustration",
       "stat": "3 wks",
-      "stat_label": "of straight gains"
+      "stat_label": "of straight gains",
+      "visual": {
+        "type": "trend",
+        "label": "MARKETS",
+        "value": "3 wks",
+        "direction": "up",
+        "place": "",
+        "country": "",
+        "lat": 0,
+        "lon": 0
+      }
     },
     {
       "category": "SCIENCE",
@@ -42,7 +52,17 @@
       ],
       "credit": "Source: Sample Science  ·  Illustration",
       "stat": "120",
-      "stat_label": "light-years away"
+      "stat_label": "light-years away",
+      "visual": {
+        "type": "stamp",
+        "label": "WATER FOUND",
+        "value": "",
+        "direction": "",
+        "place": "",
+        "country": "",
+        "lat": 0,
+        "lon": 0
+      }
     },
     {
       "category": "SPORTS",
@@ -61,7 +81,17 @@
       ],
       "credit": "Source: Sample Sports  ·  Illustration",
       "stat": "320",
-      "stat_label": "runs chased down"
+      "stat_label": "runs chased down",
+      "visual": {
+        "type": "versus",
+        "label": "Visitors",
+        "value": "Hosts",
+        "direction": "",
+        "place": "",
+        "country": "",
+        "lat": 0,
+        "lon": 0
+      }
     },
     {
       "category": "CLIMATE",
@@ -78,7 +108,17 @@
       "images": [],
       "credit": "Source: Sample Weather Desk",
       "stat": "7 days",
-      "stat_label": "ahead of schedule"
+      "stat_label": "ahead of schedule",
+      "visual": {
+        "type": "place",
+        "label": "",
+        "value": "",
+        "direction": "",
+        "place": "Kerala coast",
+        "country": "IND",
+        "lat": 9.93,
+        "lon": 76.26
+      }
     },
     {
       "category": "TECH",
@@ -97,7 +137,17 @@
       ],
       "credit": "Source: Sample Transport Desk  ·  Illustration",
       "stat": "40%",
-      "stat_label": "lower running costs"
+      "stat_label": "lower running costs",
+      "visual": {
+        "type": "trend",
+        "label": "RUNNING COST",
+        "value": "40%",
+        "direction": "down",
+        "place": "",
+        "country": "",
+        "lat": 0,
+        "lon": 0
+      }
     }
   ],
   "quick_hits": [

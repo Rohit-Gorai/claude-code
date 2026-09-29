@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from PIL import Image
 
-from . import photos
+from . import maps, photos
 from .config import ROOT, write_json
 
 TEMPLATES = ROOT / "templates"
@@ -112,7 +112,9 @@ def plan_slides(edition: dict) -> list[tuple[str, str, dict]]:
             text = stories[i + 1].get("tease") or stories[i + 1]["headline"]
         else:
             text = "Today in numbers" if has_numbers else "Quick hits"
-        slides.append((f"story{s['rank']}", "story.html.j2", {"story": s, "next_text": text, "dark_top": True}))
+        v = s.get("visual") or {}
+        map_svg = maps.inset_svg(v["country"], v["lat"], v["lon"]) if v.get("type") == "place" else ""
+        slides.append((f"story{s['rank']}", "story.html.j2", {"story": s, "v": v, "map_svg": map_svg, "next_text": text, "dark_top": True}))
     if has_numbers:
         slides.append(("numbers", "numbers.html.j2", {"stats": stats[:5], "dark_top": True}))
     if edition.get("quick_hits"):

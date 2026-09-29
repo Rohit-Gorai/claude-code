@@ -257,6 +257,24 @@ class PipelineTest(unittest.TestCase):
         up, how = photos.enlarge(img, 1.5, ai=True)
         self.assertEqual((up.size, how), ((120, 90), "ai"))
 
+    def test_story_visuals_are_validated(self):
+        from brief.editor import clean_visual
+        from brief.maps import contains, inset_svg
+
+        w = []
+        self.assertEqual(clean_visual({"type": "trend", "label": "sensex", "value": "595 pts", "direction": "down"}, "c1", w),
+                         {"type": "trend", "label": "SENSEX", "value": "595 pts", "direction": "down"})
+        self.assertEqual(clean_visual({"type": "stamp", "label": "Most wanted"}, "c1", w), {"type": "stamp", "label": "MOST WANTED"})
+        self.assertEqual(clean_visual({"type": "none"}, "c1", w), {})
+        self.assertEqual(clean_visual({"type": "stamp", "label": "a very long stamp label"}, "c1", w), {})
+        # a pin must fall inside the named country: Mumbai is in India, not in Pakistan
+        self.assertTrue(contains("IND", 19.07, 72.88))
+        self.assertTrue(contains("IND", 34.08, 74.80))  # Srinagar: India's official map includes all of J&K
+        self.assertFalse(contains("PAK", 19.07, 72.88))
+        self.assertEqual(clean_visual({"type": "place", "place": "Mumbai", "country": "PAK", "lat": 19.07, "lon": 72.88}, "c2", w), {})
+        self.assertTrue(any("not inside country" in x for x in w))
+        self.assertIn("<svg", inset_svg("IND", 19.07, 72.88))
+
     def test_stats_feed_the_numbers_slide(self):
         from brief.render import plan_slides
 

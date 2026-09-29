@@ -81,7 +81,27 @@ Every photo goes through `brief/photos.py`:
    `fine`, `soft`) and the width a replacement needs. Upscaling helps, but a bigger original is
    always better, so the editor still looks for one.
 
-## 4. Details that keep it working every day
+## 4. Story graphics
+
+Each story can carry one small graphic on its photo, chosen by the editor to fit that story and
+built only from its facts (`visual` in `edition.json`):
+
+| Type | Looks like | Use it for |
+|---|---|---|
+| `trend` | White chip: `SENSEX ▼ 595 pts` (red when down, green when up) | A number that rose or fell |
+| `stamp` | Tilted red stamp: `MOST WANTED`, `WORLD FIRST`, `CANCELLED` | A 1-3 word label that is literally true |
+| `versus` | Pill: `India vs Sri Lanka` | Matches, contests, disputes |
+| `place` | Dark card with a map and a red pin: `📍 Bengaluru` | When where it happened matters |
+
+- **Graphics, never photo edits.** The photo always shows what the camera captured. A graphic sits
+  on top of it and is obviously a graphic.
+- **Maps use India's official borders.** Borders come from Natural Earth's India point-of-view
+  dataset (public domain, bundled in `assets/maps/`), and `check` drops any pin that doesn't fall
+  inside the country it names.
+- **One consistent colour grade** (a touch of contrast, saturation and warmth, tone only) on every
+  photo, so the grid reads as one page.
+
+## 5. Details that keep it working every day
 
 - **Self-fitting text.** Headlines, the gist, stats and the last-slide copy shrink to fit. The
   photo never gets smaller than 700px tall (620px at 4:5).
@@ -91,7 +111,7 @@ Every photo goes through `brief/photos.py`:
   from `assets/logo.png` (red dot kept). Replace both if you change the logo.
 - **One font family.** Poppins 500-900 (OFL licence, bundled).
 
-## 5. Changing the look
+## 6. Changing the look
 
 - `config.yaml` → `brand`: name, logos, handle, tagline, posting `schedule`, `colors`
   (`paper` reading panel, `ink` text, `accent` red, `dark` numbers slide and last card).

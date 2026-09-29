@@ -52,6 +52,29 @@ mark {
 .media { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; background: var(--dark); }
 .media.full { position: absolute; inset: 0; }
 .media .photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* one consistent, tone-only grade on every photo so the grid reads as one page (no content edits) */
+.media .photo, .face img { filter: contrast(1.06) saturate(1.07) sepia(.06); }
+
+/* ── story graphic: one per slide, built from the story's facts ── */
+.viz { position: absolute; right: 64px; top: 150px; z-index: 3; font-family: "Poppins", sans-serif; box-shadow: 0 12px 36px rgba(0, 0, 0, .35); }
+.viz.trend { background: #fff; border-radius: 22px; padding: 16px 24px 18px; min-width: 220px; }
+.viz.trend .k { display: block; font-weight: 700; font-size: 19px; letter-spacing: .16em; color: #6f6a62; }
+.viz.trend .val { display: flex; align-items: baseline; gap: 10px; margin-top: 2px; font-weight: 900; font-size: 50px; line-height: 1.05; letter-spacing: -0.03em; white-space: nowrap; }
+.viz.trend .val i { font-style: normal; font-size: .62em; }
+.viz.trend.down .val { color: var(--accent); }
+.viz.trend.up .val { color: #0f9d58; }
+.viz.stamp {
+  box-shadow: none; transform: rotate(-6deg);
+  border: 5px solid var(--accent); border-radius: 12px; padding: 10px 22px 8px;
+  font-weight: 900; font-size: 40px; letter-spacing: .08em; color: #fff; background: rgba(227, 18, 11, .82);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+}
+.viz.versus { display: flex; align-items: center; gap: 14px; background: #fff; border-radius: 999px; padding: 14px 28px; font-weight: 800; font-size: 32px; color: var(--ink); white-space: nowrap; }
+.viz.versus i { font-style: normal; font-weight: 800; font-size: 20px; color: #fff; background: var(--accent); border-radius: 999px; padding: 4px 12px; }
+.viz.place { width: 260px; background: rgba(14, 14, 17, .88); border-radius: 22px; overflow: hidden; }
+.viz.place > svg { display: block; width: 260px; height: 230px; }
+.viz.place span { display: flex; align-items: center; gap: 8px; padding: 12px 16px 14px; font-weight: 700; font-size: 21px; line-height: 1.25; color: #fff; }
+.viz.place span svg { width: 22px; height: 22px; flex: none; color: var(--accent); }
 .media .shade {
   position: absolute; inset: 0;
   background:

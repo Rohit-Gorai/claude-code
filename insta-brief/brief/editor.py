@@ -18,6 +18,23 @@ import re
 # What a story makes the reader feel. High-arousal emotions (awe, anger, anxiety) and useful or
 # surprising stories get shared; low-arousal sadness does not (Berger & Milkman 2012, see VIRALITY.md).
 EMOTIONS = ("AWE", "USEFUL", "SURPRISE", "PRIDE", "JOY", "ANGER", "ANXIETY", "SAD")
+# One graphic per story, drawn on its photo from the story's facts (never an edit of the photo).
+VISUALS = ("none", "trend", "stamp", "versus", "place")
+VISUAL_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["type", "label", "value", "direction", "place", "country", "lat", "lon"],
+    "properties": {
+        "type": {"type": "string", "enum": list(VISUALS)},
+        "label": {"type": "string"},
+        "value": {"type": "string"},
+        "direction": {"type": "string", "enum": ["up", "down", ""]},
+        "place": {"type": "string"},
+        "country": {"type": "string"},
+        "lat": {"type": "number"},
+        "lon": {"type": "number"},
+    },
+}
 
 EDITION_SCHEMA = {
     "type": "object",
@@ -36,7 +53,7 @@ EDITION_SCHEMA = {
                 "type": "object",
                 "additionalProperties": False,
                 "required": ["candidate_id", "category", "emotion", "headline", "highlight", "tease", "stat", "stat_label",
-                             "summary", "why_it_matters", "alt_text"],
+                             "visual", "summary", "why_it_matters", "alt_text"],
                 "properties": {
                     "candidate_id": {"type": "string"},
                     "category": {"type": "string"},
@@ -46,6 +63,7 @@ EDITION_SCHEMA = {
                     "tease": {"type": "string"},
                     "stat": {"type": "string"},
                     "stat_label": {"type": "string"},
+                    "visual": VISUAL_SCHEMA,
                     "summary": {"type": "string"},
                     "why_it_matters": {"type": "string"},
                     "alt_text": {"type": "string"},
@@ -150,6 +168,19 @@ HOW TO WRITE: SPECIFIC BEATS GENERIC
   the story has no honest number. Aim for at least 3 stats per edition.
 - stat_label: at most 5 words saying what the stat is, readable on its own on the numbers slide
   ("more for a new AC", "India's rank this year"). Empty string when stat is empty.
+- visual: one small graphic drawn on the story's photo, chosen to fit the story. Pick the one that
+  adds the most at a glance, or "none":
+  - "trend": a number that rose or fell. label = what (≤12 chars, "SENSEX"), value = by how much
+    ("595 pts", "₹2/litre"), direction = "up" or "down".
+  - "stamp": a 1-3 word label that is literally true of the story ("MOST WANTED", "WORLD FIRST",
+    "RECORD", "BANNED") in label. Never a verdict the sources don't state ("GUILTY", "SCAM").
+  - "versus": two sides of a match, contest or dispute: label = one side, value = the other.
+  - "place": where it happened, shown as a pin on a map. place = a short name (≤30 characters:
+    "Bengaluru", "Supreme Court, Delhi"), country = its ISO 3166 alpha-3 code ("IND"), lat/lon =
+    that place's coordinates in decimal degrees. Best when the place itself is news to the reader.
+  Fill unused fields with "" or 0. Everything in a visual must come from the material: no invented
+  numbers, and no chart shapes that imply data you don't have. It is a graphic on top of the
+  photo; never ask for the photo itself to be edited.
 - summary: the gist in 15-25 words, one or two short sentences, the way you'd say it to a friend:
   what happened and the one number or name that matters. Readers should take it in at a glance,
   without effort. No second clause, no jargon, no list of figures; your own words.
@@ -304,6 +335,34 @@ def edit_basic(candidates: list[dict], cfg: dict, date: dt.date) -> dict:
     }
 
 
+def clean_visual(v: dict | None, cid, warnings: list[str]) -> dict:
+    """Validate a story's `visual`; returns {} (no graphic) when it is missing or unusable."""
+    if not isinstance(v, dict) or v.get("type", "none") in ("none", "", None):
+        return {}
+    kind = v["type"]
+    text = lambda k, n: " ".join(str(v.get(k) or "").split())[:n]  # noqa: E731
+    if kind == "trend" and text("value", 16) and v.get("direction") in ("up", "down"):
+        return {"type": kind, "label": text("label", 14).upper(), "value": text("value", 16), "direction": v["direction"]}
+    if kind == "stamp" and 0 < len(text("label", 40).split()) <= 3 and len(text("label", 40)) <= 18:
+        return {"type": kind, "label": text("label", 18).upper()}
+    if kind == "versus" and text("label", 18) and text("value", 18):
+        return {"type": kind, "label": text("label", 18), "value": text("value", 18)}
+    if kind == "place" and text("place", 40):
+        from . import maps
+
+        try:
+            lat, lon, iso = float(v.get("lat")), float(v.get("lon")), text("country", 3).upper()
+        except (TypeError, ValueError):
+            lat, lon, iso = 0.0, 0.0, ""
+        if maps.contains(iso, lat, lon):
+            return {"type": kind, "place": text("place", 40), "country": iso, "lat": lat, "lon": lon}
+        warnings.append(f"visual for {cid}: {v.get('place')!r} at ({v.get('lat')}, {v.get('lon')}) is not inside country "
+                        f"{v.get('country')!r} — map dropped; check the coordinates and the ISO-3 code")
+        return {}
+    warnings.append(f"visual for {cid} is an incomplete {kind!r} ({v}) — dropped")
+    return {}
+
+
 KEYCAPS = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
 
@@ -362,6 +421,7 @@ def finalize(raw: dict, candidates: list[dict], cfg: dict) -> tuple[dict, list[s
                 "tease": " ".join((s.get("tease") or "").split()).rstrip("."),
                 "stat": stat,
                 "stat_label": stat_label if stat else "",
+                "visual": clean_visual(s.get("visual"), cid, warnings),
                 "summary": s["summary"].strip(),
                 "why_it_matters": s.get("why_it_matters", "").strip(),
                 "alt_text": s.get("alt_text", headline),

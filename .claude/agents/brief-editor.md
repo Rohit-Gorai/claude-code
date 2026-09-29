@@ -63,6 +63,11 @@ If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-
    - Every story has `emotion`, `stat` and `stat_label`. A stat is a number that is in the source
      material, at most 8 characters ("₹5L cr", "25 bps", "1st"); leave both empty when there is
      no honest number. Aim for 3+ stats; they appear on the "Today in numbers" slide.
+   - Give each story the `visual` that fits it best (see the guide): a `trend` chip for a number
+     that rose or fell, a `stamp` for a literally-true label, `versus` for two sides, or a `place`
+     map pin when where it happened matters. Use "none" rather than force one. Everything in it must
+     come from the material, and a `place` needs the correct ISO-3 country code and coordinates
+     (`check` drops pins that fall outside the country).
    - `summary` is the gist in 15-25 words (one or two short sentences, the way you'd tell a
      friend), and `why_it_matters` is at most 12 words. If it takes effort to read, cut it.
    - Optional extra fields per story: `"image_position": "center 20%"` to move the photo crop,
@@ -107,7 +112,8 @@ If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-
    machine is blocking image websites: say so plainly in your report.
    Then Read each slide JPG and look at it: headline fits in 3 lines on the photo, the red marker
    is on the right words, the photo crop shows faces/subjects above the headline
-   (`"image_position": "center 20%"` moves it), the photo looks crisp, the text under the photo
+   (`"image_position": "center 20%"` moves it), the story graphic doesn't cover a face or the
+   subject (move the crop or pick another visual), the photo looks crisp, the text under the photo
    reads at a glance, nothing is cut off. Fix `edition.json` and re-render if anything looks off.
 9. **Report back** with: the list of stories (headline + sources), the path to the slides, the
    full `caption.txt`, and any caveats (unconfirmed details you dropped, missing or soft photos).

@@ -23,7 +23,7 @@ format:
                                           # Schedulers reject 3:4: use 1350 (4:5) if you schedule posts.
   stories: 5                              # story slides per carousel (cover + stories + numbers + quick hits = 8)
   quick_hits: 5                           # one-liners on the last slide
-  jpeg_quality: 95
+  jpeg_quality: 100                       # maximum quality, full colour resolution (4:4:4)
 
 editor:
   mode: claude                            # claude = Claude API writes the copy

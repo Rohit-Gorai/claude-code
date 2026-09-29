@@ -92,9 +92,10 @@ THE VIRALITY FORMULA: STOP → SWIPE → FEEL → SHARE
 1. STOP. The cover makes a stranger stop scrolling: a 5-8 word hook about the most shareable story
    (a number, a famous name or a stake for the reader) on a photo with a face or strong contrast,
    with a curiosity gap only the carousel closes.
-2. SWIPE. Every story slide ends on an open loop: its "Next" bar teases the next story ("Next: the
-   ₹ change hitting your wallet"). Stats appear as stickers on the photos and again on the numbers
-   slide, which people save.
+2. SWIPE. Every story slide ends on an open loop: its "Next" line teases the next story ("Next: the
+   ₹ change hitting your wallet"). Reading must feel effortless: a headline, one or two short
+   sentences and one "Why it matters" line per slide, nothing more. The stats go on the "Today in
+   numbers" slide, which people save.
 3. FEEL. High-arousal emotions spread: AWE (records, firsts, science, space), ANGER at an injustice
    or a scam, ANXIETY about something readers can act on, plus USEFUL, SURPRISE, PRIDE and JOY
    stories. SAD stories spread least. Build an arc: open with the most shareable story, give readers
@@ -131,7 +132,7 @@ Stories that rarely pass: routine political statements, court procedure, diploma
 
 HOW TO WRITE: SPECIFIC BEATS GENERIC
 (The quoted examples below are made up to show the style. Never reuse their facts.)
-- headline: at most ~10 words, Title Case, active voice, present tense. It sits on the photo in big
+- headline: at most ~9 words, Title Case, active voice, present tense. It sits on the photo in big
   white type, so short wins. Lead with the most surprising or useful element: a number (₹, %, a
   record), a famous name, or what changes for the reader. Use "You/Your" when the story really is
   about the reader. No wire-speak ("amid", "slams", "mulls", "sources say"). "Your AC Will Cost ₹3,000
@@ -144,15 +145,15 @@ HOW TO WRITE: SPECIFIC BEATS GENERIC
 - tease: at most 6 words, shown on the slide *before* this story as "Next: …". Tease without
   telling: open a question the slide answers ("Why your bank is open today", "The record nobody
   expected"). Never give away the answer or repeat the headline.
-- stat: the story's key number for the photo sticker and the "Today in numbers" slide, at most 8
-  characters: "₹3,000", "25 bps", "5.25%", "1st", "120 yrs", "3x". Only a number that is in the
-  material; empty string if the story has no honest number. Aim for at least 3 stats per edition.
+- stat: the story's key number for the "Today in numbers" slide, at most 8 characters: "₹3,000",
+  "25 bps", "5.25%", "1st", "120 yrs", "3x". Only a number that is in the material; empty string if
+  the story has no honest number. Aim for at least 3 stats per edition.
 - stat_label: at most 5 words saying what the stat is, readable on its own on the numbers slide
   ("more for a new AC", "India's rank this year"). Empty string when stat is empty.
-- summary: 25-40 words in 2-3 short sentences; each sentence becomes a bullet point on the slide.
-  Sentence 1: what happened. Sentence 2: the key number or name. Sentence 3: what happens next.
-  Plain English, no jargon, your own words.
-- why_it_matters: at most 16 words on what it means for the reader ("Your salary lands on time this
+- summary: the gist in 15-25 words, one or two short sentences, the way you'd say it to a friend:
+  what happened and the one number or name that matters. Readers should take it in at a glance,
+  without effort. No second clause, no jargon, no list of figures; your own words.
+- why_it_matters: at most 12 words on what it means for the reader ("Your salary lands on time this
   month"), not for institutions. Empty string if there is no honest answer.
 - category: one short caps label such as INDIA, WORLD, MONEY, TECH, SPORTS, CULTURE, SCIENCE, HEALTH,
   POLITICS, CLIMATE.
@@ -163,7 +164,7 @@ HOW TO WRITE: SPECIFIC BEATS GENERIC
   gap: a stake ("Your bank" / "is open after all"), a surprise ("Greece did it" / "for the first time
   ever"), or a number ("₹3,000 more" / "for your next AC"). Never generic ("Today's top stories",
   "Your daily brief"). Do not repeat the #1 headline word for word.
-- quick_hits text: at most 12 words, one line of news, no full stop.
+- quick_hits text: at most 10 words, one line of news, no full stop.
 - caption_hook: the first line of the caption, at most 15 words; Instagram cuts it off after ~125
   characters and search reads it first, so it names the #1 story's key name or keyword and its most
   intriguing fact.
@@ -287,7 +288,7 @@ def edit_basic(candidates: list[dict], cfg: dict, date: dt.date) -> dict:
                 "tease": "",
                 "stat": "",
                 "stat_label": "",
-                "summary": _clip_words(body, 40),
+                "summary": _clip_words(body, 25),
                 "why_it_matters": "",
                 "alt_text": f"News slide: {headline}",
             }
@@ -301,25 +302,6 @@ def edit_basic(candidates: list[dict], cfg: dict, date: dt.date) -> dict:
         "share_line": "",
         "hashtags": ["#news", "#india", "#headlines", "#dailybrief"],
     }
-
-
-_ABBREV = re.compile(r"\b(?:Mr|Mrs|Ms|Dr|St|Jr|Sr|vs|No|Rs|Govt|Gen|Lt|Col|Capt|Prof|Inc|Ltd|Co|Jan|Feb|Aug|Sept?|Oct|Nov|Dec)\.$", re.I)
-
-
-def bullets(summary: str, limit: int = 3) -> list[str]:
-    """Split a summary into the slide's bullet points without breaking on "Dr.", "U.S." or "5.25%"."""
-    parts, cur = [], ""
-    for chunk in re.split(r"(?<=[.!?])\s+(?=[A-Z0-9₹$\"'(“‘])", " ".join(summary.split())):
-        cur = f"{cur} {chunk}".strip()
-        if _ABBREV.search(cur) or re.search(r"\b[A-Z]\.$", cur):
-            continue  # "Dr. Rao" or "U.S. Senate": the sentence goes on
-        parts.append(cur)
-        cur = ""
-    if cur:
-        parts.append(cur)
-    if len(parts) > limit:
-        parts = parts[: limit - 1] + [" ".join(parts[limit - 1 :])]
-    return parts
 
 
 KEYCAPS = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
@@ -354,7 +336,7 @@ def finalize(raw: dict, candidates: list[dict], cfg: dict) -> tuple[dict, list[s
         hl = headline[i : i + len(hl)]
         stat, stat_label = " ".join((s.get("stat") or "").split()), " ".join((s.get("stat_label") or "").split())
         if len(stat) > 10:
-            warnings.append(f"stat {stat!r} for {cid} is {len(stat)} characters (max 8) — dropped from the sticker")
+            warnings.append(f"stat {stat!r} for {cid} is {len(stat)} characters (max 8) — dropped from the numbers slide")
             stat, stat_label = "", ""
         elif len(stat) > 8:
             warnings.append(f"stat {stat!r} for {cid} is {len(stat)} characters (max 8); it will be shrunk to fit")
@@ -362,11 +344,11 @@ def finalize(raw: dict, candidates: list[dict], cfg: dict) -> tuple[dict, list[s
         if emotion and emotion not in EMOTIONS:
             warnings.append(f"emotion {emotion!r} for {cid} is not one of {', '.join(EMOTIONS)} — ignored")
         n_words = len(s["summary"].split())
-        if n_words > 48:
-            warnings.append(f"summary for {cid} is {n_words} words (aim for 25-40); it will be shrunk to fit")
-        longest = max((len(b.split()) for b in bullets(s["summary"])), default=0)
-        if longest > 26:
-            warnings.append(f"summary for {cid} has a {longest}-word sentence; use 2-3 short sentences (each one is a bullet on the slide)")
+        if n_words > 30:
+            warnings.append(f"summary for {cid} is {n_words} words; cut it to 15-25 so it reads at a glance")
+        n_why = len((s.get("why_it_matters") or "").split())
+        if n_why > 14:
+            warnings.append(f"why_it_matters for {cid} is {n_why} words; keep it to 12")
         stories.append(
             {
                 "rank": len(stories) + 1,

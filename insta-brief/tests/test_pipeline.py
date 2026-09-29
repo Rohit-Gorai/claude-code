@@ -95,7 +95,7 @@ class PipelineTest(unittest.TestCase):
         self.assertIn("25", _tokens("RBI cuts repo rate by 25 bps"))  # real numbers still count
 
     def test_watermarked_share_cards_are_skipped(self):
-        from brief.enrich import usable_image_url
+        from brief.photos import usable_image_url
 
         self.assertFalse(usable_image_url("https://i.guim.co.uk/img/x.jpg?width=1200&overlay-base64=L2ltZy9"))
         self.assertTrue(usable_image_url("https://images.indianexpress.com/2026/09/lng-train.jpg"))
@@ -225,14 +225,22 @@ class PipelineTest(unittest.TestCase):
         for c in self.candidates:
             self.assertIn("viral", c)
 
-    def test_summary_becomes_bullets(self):
-        from brief.editor import bullets
+    def test_bigger_photo_variants(self):
+        from brief.photos import Photo, bigger_variants
 
         self.assertEqual(
-            bullets("The U.S. Senate voted 52-48. Dr. Rao said rates of 5.25% will hold. Next steps come in Oct. and Nov."),
-            ["The U.S. Senate voted 52-48.", "Dr. Rao said rates of 5.25% will hold.", "Next steps come in Oct. and Nov."],
+            bigger_variants("https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Kohli.jpg/800px-Kohli.jpg")[0],
+            "https://upload.wikimedia.org/wikipedia/commons/a/ab/Kohli.jpg",
         )
-        self.assertEqual(len(bullets("One. Two. Three. Four.")), 3)
+        self.assertEqual(bigger_variants("https://x.com/wp-content/uploads/2026/09/pic-1200x675.jpeg")[0],
+                         "https://x.com/wp-content/uploads/2026/09/pic.jpeg")
+        self.assertEqual(bigger_variants("https://img.x.com/a.jpg?w=640&sig=abc")[0], "https://img.x.com/a.jpg?sig=abc")
+        self.assertEqual(bigger_variants("https://dims.x.com/r/?url=https%3A%2F%2Fa.x.com%2Fb.jpg")[0], "https://a.x.com/b.jpg")
+        # the original URL is always tried last, so nothing is lost
+        self.assertEqual(bigger_variants("https://img.x.com/a.jpg?w=640")[-1], "https://img.x.com/a.jpg?w=640")
+        cover = (1080, 1440)
+        self.assertLessEqual(Photo(b"", "", 2400, 3200, "JPEG").stretch(cover), 1.0)
+        self.assertAlmostEqual(Photo(b"", "", 1200, 675, "JPEG").stretch(cover), 1440 / 675)
 
     def test_stats_feed_the_numbers_slide(self):
         from brief.render import plan_slides
@@ -273,13 +281,13 @@ class PipelineTest(unittest.TestCase):
                                 "share_line": "Send this to the friend with a home loan"}, self.candidates, self.cfg)
         self.assertFalse(any("bait" in w for w in warnings))
 
-    def test_long_summary_sentence_warns(self):
+    def test_long_copy_warns(self):
         cid = self.candidates[0]["id"]
-        long = " ".join(["word"] * 30) + "."
         story = {"candidate_id": cid, "category": "MONEY", "headline": "RBI Cuts Rate", "highlight": "RBI",
-                 "summary": long, "why_it_matters": "", "alt_text": "a"}
+                 "summary": " ".join(["word"] * 34) + ".", "why_it_matters": " ".join(["so"] * 16), "alt_text": "a"}
         _, warnings = finalize({"stories": [story]}, self.candidates, self.cfg)
-        self.assertTrue(any("30-word sentence" in w for w in warnings))
+        self.assertTrue(any("is 34 words" in w for w in warnings))
+        self.assertTrue(any("why_it_matters" in w and "16 words" in w for w in warnings))
 
 
 if __name__ == "__main__":

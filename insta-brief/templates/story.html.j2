@@ -1,21 +1,21 @@
 {% extends "base.html.j2" %}
+{% block topright %}{% if story.credit %}<span class="credit">{{ story.credit }}</span>{% endif %}{% endblock %}
 {% block body %}
   <div class="media">
     {% if story.image_file %}<img class="photo" src="{{ story.image_file }}" style="object-position: {{ story.image_position or 'center 30%' }}">
     {% else %}<div class="fallback"><span class="fb-word">{{ story.category }}</span></div>{% endif %}
     <div class="shade"></div>
-    {% if story.stat %}<div class="sticker"><b>{{ story.stat }}</b>{% if story.stat_label %}<span>{{ story.stat_label }}</span>{% endif %}</div>{% endif %}
     <div class="over">
-      <div class="tags"><span class="rank">{{ "%02d" % story.rank }}</span>{% if story.category %}<span class="cat">{{ story.category }}</span>{% endif %}</div>
+      {% if story.category %}<div class="cat">{{ story.category }}</div>{% endif %}
       <h2 class="headline">{{ story.hl_before }}<mark>{{ story.hl_text }}</mark>{{ story.hl_after }}</h2>
     </div>
   </div>
   <div class="panel">
-    <ul class="points">{% for b in bullets %}<li>{{ b }}</li>{% endfor %}</ul>
-    {% if story.why_it_matters %}<div class="why"><span class="label">Why it matters to you</span><p>{{ story.why_it_matters }}</p></div>{% endif %}
+    <p class="gist">{{ story.summary }}</p>
+    {% if story.why_it_matters %}<p class="why"><b>Why it matters:</b> {{ story.why_it_matters }}</p>{% endif %}
     <div class="foot">
-      <div class="credit"><b>{{ brand.handle }}</b>{% if story.credit %} · {{ story.credit }}{% endif %}</div>
-      <div class="next"><span class="lbl">{{ next_label }}</span><span class="tease">{{ next_text }}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+      <span class="handle">{{ brand.handle }}</span>
+      <span class="next">Next: {{ next_text }} →</span>
     </div>
   </div>
 {% endblock %}

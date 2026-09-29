@@ -53,12 +53,12 @@ studies and marketing blogs. Treat them as strong hints, not laws. Sources are a
 
 | Finding | Change |
 |---|---|
-| Sends + time spent rank posts | Every story ends on a **Next** bar that teases the next one; the last slide names who to send the post to. |
+| Sends + time spent rank posts | Every story ends on a "Next: …" line that teases the next one; each slide reads at a glance (headline, 15-25 word gist, one "Why it matters" line); the last slide names who to send the post to. |
 | 8-10 slides win | Carousels are now **8 slides**: cover, 5 stories, **Today in numbers**, quick hits. |
 | Slide 2 is re-shown | Story slides open with the photo and headline, so story #1 works as a second cover. The editor must put the most shareable, non-political story first. |
-| Cover must stop the scroll | Full-bleed photo (ideally a face), 5-8 word hook on a red marker, "Also inside" thumbnails, **Swipe →** button, `1/8` counter. |
+| Cover must stop the scroll | Full-bleed photo (ideally a face, the sharpest version the renderer can find), 5-8 word hook on a red marker, round previews of the other stories, **Swipe →** button. |
 | Originality | A new, original design (no copy of another page's layout). The editor re-tells every story in its own words with original "why it matters" and stats, and the numbers slide is fully original. |
-| Saves | Stats appear as stickers and again on the saveable **Today in numbers** slide. |
+| Saves | The edition's key numbers are collected on the saveable **Today in numbers** slide. |
 | Awe, anger, anxiety spread; sadness doesn't | Each story gets an `emotion`. `check` warns if the edition has more than one SAD story, leads with one, or has no AWE / JOY / PRIDE high point (ideally last). |
 | Useful + surprising content spreads | **New ranking signal** (`brief/virality.py`): candidates about money, records/space/science, India pride, famous names, surprises and scams move up; political and grim stories move down. Each candidate carries `viral` and `flags` for the editor. |
 | Bait is demoted | The question must invite an opinion *and* a reason. `check` flags "comment YES", "tag a friend", "like if" in the question, share line and caption. |

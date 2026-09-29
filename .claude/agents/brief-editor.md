@@ -16,8 +16,8 @@ Every carousel (8 slides: cover, 5 stories, "Today in numbers", quick hits) foll
 research behind it is in `insta-brief/VIRALITY.md`):
 - **STOP:** a 5-8 word cover hook about the most shareable, non-political story, on its photo
   (ideally a face). The cover is that photo, full-bleed.
-- **SWIPE:** every story slide ends on a "Next: <tease>" bar, and each story's key number shows as
-  a sticker on its photo.
+- **SWIPE:** every story slide ends on a "Next: <tease>" line. Reading must feel effortless: each
+  slide is a headline on the photo, a 15-25 word gist and one short "Why it matters" line. Nothing more.
 - **FEEL:** an emotional arc. Awe, useful, surprise and pride spread; sadness doesn't. Shareable
   lead, something useful for the reader's money, an AWE / JOY / PRIDE story last, at most one SAD.
 - **SHARE:** at least 3 `stat`s so the saveable "Today in numbers" slide is built; the last slide
@@ -62,8 +62,9 @@ If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-
      posts to non-followers. Politics, government and protest stories go on slide 4 or later.
    - Every story has `emotion`, `stat` and `stat_label`. A stat is a number that is in the source
      material, at most 8 characters ("₹5L cr", "25 bps", "1st"); leave both empty when there is
-     no honest number. Aim for 3+ stats. Write `summary` as 2-3 short sentences: each one
-     becomes a bullet point on the slide.
+     no honest number. Aim for 3+ stats; they appear on the "Today in numbers" slide.
+   - `summary` is the gist in 15-25 words (one or two short sentences, the way you'd tell a
+     friend), and `why_it_matters` is at most 12 words. If it takes effort to read, cut it.
    - Optional extra fields per story: `"image_position": "center 20%"` to move the photo crop,
      `"images": [url, ...]` to supply a better photo than the article's (see step 7).
 6. **Check.** Run `python -m brief check`. Fix every warning it prints and re-run until clean.
@@ -85,22 +86,27 @@ If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-
    - the lead image (`og:image`) of an article about the story, found with WebSearch + WebFetch;
    - official sources: the company/government/team/ISRO/PIB press release or handout photo;
    - Wikimedia Commons for people, places and landmarks (use the `upload.wikimedia.org` file URL).
-   Use a direct `.jpg`/`.png`/`.webp` URL at least ~600px wide that actually shows the story's
-   subject (a person's face, the place, the product), never a logo graphic, a generic stock
-   illustration, or a share card with another outlet's big logo burned in (The Guardian's are
-   skipped automatically). For a company story, a photo of its CEO or office beats its logo.
-   Story #1's photo also fills the whole cover, so give it the largest sharp photo you can find
-   (ideally 1200px+ wide, a face or a strong subject in the upper half).
-8. **Render.** Run `python -m brief render`. It prints `Photos: N/M stories have a real photo`.
-   For each story still missing one, try the next source above and re-render. Use the
-   text-only card only as a last resort, and name those stories in your report. If *every*
-   download fails, the machine is blocking image websites: say so plainly in your report.
+   Use a direct `.jpg`/`.png`/`.webp` URL that actually shows the story's subject (a person's
+   face, the place, the product), never a logo graphic, a generic stock illustration, or a share
+   card with another outlet's big logo burned in (Guardian and BBC ones are skipped automatically).
+   For a company story, a photo of its CEO or office beats its logo.
+   **Photo quality:** the biggest original you can find. Story #1's photo fills the whole
+   1080×1440 cover, so it needs to be ~2600px wide if landscape (or 1080×1440+ if portrait);
+   other stories need ~1500px wide. Wikimedia Commons originals, press-kit and PIB/ISRO/team
+   handouts are usually far larger than news thumbnails. List several URLs per story, best first:
+   the renderer tries bigger versions of each (it strips `-1200x675`, `?w=640`, Wikimedia `800px-`
+   thumbnails), keeps the original file without re-compressing it, and picks the sharpest.
+8. **Render.** Run `python -m brief render`. It prints each photo's size and verdict
+   (`sharp`, `fine` or `soft` on the cover/slide) and `! Soft photos: …` with the width needed.
+   For every soft or missing photo, find a bigger one and re-render. Use the text-only card only
+   as a last resort, and name those stories in your report. If *every* download fails, the
+   machine is blocking image websites: say so plainly in your report.
    Then Read each slide JPG and look at it: headline fits in 3 lines on the photo, the red marker
    is on the right words, the photo crop shows faces/subjects above the headline
-   (`"image_position": "center 20%"` moves it), the stat sticker doesn't cover a face, bullets are
-   readable (not tiny), nothing is cut off. Fix `edition.json` and re-render if anything looks off.
+   (`"image_position": "center 20%"` moves it), the photo looks crisp, the text under the photo
+   reads at a glance, nothing is cut off. Fix `edition.json` and re-render if anything looks off.
 9. **Report back** with: the list of stories (headline + sources), the path to the slides, the
-   full `caption.txt`, and any caveats (unconfirmed details you dropped, missing photos).
+   full `caption.txt`, and any caveats (unconfirmed details you dropped, missing or soft photos).
 
 ## Voice
 

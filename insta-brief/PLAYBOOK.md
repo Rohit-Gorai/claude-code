@@ -56,8 +56,8 @@ formula, **STOP → SWIPE → FEEL → SHARE**:
 
 | Step | On the post | Why it works |
 |---|---|---|
-| **Stop** | Cover = story #1's photo (ideally a face) with a 5-8 word hook on a red marker, "Also inside" thumbnails and a **Swipe →** button | The cover is all a stranger sees in Explore and the feed |
-| **Swipe** | Progress bar and `2/8` counter on every slide; each story ends on a **Next** bar teasing the next one; stat stickers on the photos | Open loops keep people swiping, and time spent tells Instagram the post is worth showing |
+| **Stop** | Cover = story #1's sharpest photo (ideally a face) with a 5-8 word hook on a red marker, round previews of the other stories and a **Swipe →** button | The cover is all a stranger sees in Explore and the feed |
+| **Swipe** | A thin progress bar on every slide; each story is a headline, a 15-25 word gist and one "Why it matters" line, ending on "Next: …" | Effortless reading keeps people swiping, and time spent tells Instagram the post is worth showing |
 | **Feel** | Awe, useful, surprise and pride stories; at most one sad story; end on a high | High-arousal emotions (awe, anger, anxiety) get shared; sadness doesn't |
 | **Share** | "Today in numbers" to save; the last slide asks a real question (opinion + reason) and names who to send the post to | Saves and DM sends are the strongest ranking signals; bait like "comment YES" is demoted |
 

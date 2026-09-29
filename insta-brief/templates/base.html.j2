@@ -16,12 +16,12 @@
 <div class="slide slide-{{ kind }} {{ 'on-dark' if dark_top else 'on-light' }}">
   {% block body %}{% endblock %}
 
-  {# Story-style progress bar + logo + counter: tells people there is more to swipe. #}
+  {# A thin story-style progress bar tells people there is more to swipe, without a word. #}
   <div class="chrome">
     <div class="progress">{% for i in range(total) %}<i class="{{ 'done' if i + 1 < index else ('now' if i + 1 == index else '') }}"></i>{% endfor %}</div>
     <div class="topbar">
       {% if logo %}<img class="logo" src="{{ logo_white if dark_top else logo }}" alt="{{ brand.name }}">{% else %}<span class="wordmark">{{ brand.name }}</span>{% endif %}
-      <span class="count">{{ index }}<span>/{{ total }}</span></span>
+      {% block topright %}{% endblock %}
     </div>
   </div>
 </div>
@@ -29,11 +29,11 @@
 // Auto-fit: shrink text until each block fits its line budget and the slide fits the canvas.
 const px = el => parseFloat(getComputedStyle(el).fontSize);
 const setPx = (el, v) => { el.style.fontSize = v + "px"; };
+const lines = el => el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight);
 function fitLines(el, maxLines, minPx) {
   if (!el) return;
   let size = px(el);
-  const ratio = parseFloat(getComputedStyle(el).lineHeight) / size;
-  while (el.getBoundingClientRect().height > maxLines * size * ratio + 4 && size > minPx) setPx(el, --size);
+  while (lines(el) > maxLines + 0.2 && size > minPx) setPx(el, --size);
 }
 function fitWidth(el, minPx) {
   if (!el) return;
@@ -58,32 +58,28 @@ window.__layout = async () => {
   await document.fonts.ready;
   await Promise.all([...document.images].map(img => img.decode().catch(() => {})));
   // cover
-  fitLines(q(".hook"), 3, 60);
-  shrinkUntil([q(".hook")], 60, () => q(".cover-body") && q(".cover-body").getBoundingClientRect().top >= {{ cover_min_photo }});
+  fitLines(q(".hook"), 3, 64);
+  if (q(".cover-body")) shrinkUntil([q(".hook")], 64, () => q(".cover-body").getBoundingClientRect().top >= {{ cover_min_photo }});
   // story
-  fitLines(q(".headline"), 3, 44);
-  // bullets share one size so the slide reads evenly; none may run past 3 lines
-  const points = qa(".points li"), lines = el => el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight);
-  shrinkUntil(points, 25, () => points.every(li => lines(li) <= 3.2));
-  fitLines(q(".why p"), 2, 22);
-  fitLines(q(".next .tease"), 1, 20);
-  fitWidth(q(".sticker b"), 34);
-  fitLines(q(".sticker span"), 2, 18);
+  fitLines(q(".headline"), 3, 46);
+  fitLines(q(".gist"), 4, 28);
+  fitLines(q(".why"), 2, 25);
+  fitWidth(q(".next"), 20);
+  fitLines(q(".credit"), 2, 14);
   const media = q(".slide-story .media");
   if (media) {
-    shrinkUntil([...qa(".points li"), q(".why p")], 23, () => media.getBoundingClientRect().height >= {{ min_media }});
-    shrinkUntil([q(".headline")], 40, () => media.getBoundingClientRect().height >= {{ min_media }} && q(".over").getBoundingClientRect().top >= 170);
+    shrinkUntil([q(".gist"), q(".why")], 26, () => media.getBoundingClientRect().height >= {{ min_media }});
+    shrinkUntil([q(".headline")], 44, () => media.getBoundingClientRect().height >= {{ min_media }} && q(".over").getBoundingClientRect().top >= 190);
   }
   // numbers
-  qa(".stats .num").forEach(el => fitWidth(el, 40));
-  qa(".stats .lbl b").forEach(el => fitLines(el, 2, 22));
-  if (q(".stats")) shrinkUntil([...qa(".stats .num"), ...qa(".stats .lbl b")], 22, () => fits(q(".slide")));
+  qa(".stats .num").forEach(el => fitWidth(el, 44));
+  qa(".stats .lbl").forEach(el => fitLines(el, 2, 24));
+  if (q(".stats")) shrinkUntil([...qa(".stats .num"), ...qa(".stats .lbl")], 24, () => fits(q(".slide")));
   // wrap
-  qa(".hits .t").forEach(el => fitLines(el, 2, 22));
-  fitLines(q(".cta .ask"), 3, 28);
-  fitLines(q(".cta .share"), 2, 20);
-  if (q(".hits")) shrinkUntil([...qa(".hits .t")], 20, () => fits(q(".slide")));
-  if (q(".hits")) shrinkUntil([q(".cta .ask"), q(".cta .share")], 20, () => fits(q(".slide")));
+  qa(".hits .t").forEach(el => fitLines(el, 2, 24));
+  fitLines(q(".cta .ask"), 3, 30);
+  fitLines(q(".cta .share"), 2, 22);
+  if (q(".hits")) shrinkUntil([...qa(".hits .t"), q(".cta .ask"), q(".cta .share")], 22, () => fits(q(".slide")));
   return true;
 };
 </script>

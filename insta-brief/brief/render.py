@@ -5,15 +5,17 @@ from __future__ import annotations
 import base64
 import datetime as dt
 import functools
+import io
+import math
 import os
 from pathlib import Path
 from urllib.parse import urlparse
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from PIL import Image
 
+from . import photos
 from .config import ROOT, write_json
-from .editor import bullets
-from .enrich import download_image
 
 TEMPLATES = ROOT / "templates"
 FONTS = ROOT / "assets" / "fonts"
@@ -55,24 +57,40 @@ def logo_uri(brand: dict, key: str = "logo") -> str:
 def _credit(story: dict, image_url: str | None) -> str:
     src = ", ".join(story["sources"][:2])
     if not image_url or not image_url.startswith("http"):
-        return f"Source: {src}" if src else ""
+        return src
     host = urlparse(image_url).netloc.removeprefix("www.")
-    return f"Source: {src}  ·  Image: {host}" if src else f"Image: {host}"
+    return f"{src} · Photo: {host}" if src else f"Photo: {host}"
 
 
-def _prepare_images(edition: dict, img_dir: Path, html_dir: Path, log=print) -> None:
+def _prepare_images(edition: dict, img_dir: Path, html_dir: Path, fmt: dict, log=print) -> None:
+    """Pick and prepare the sharpest photo for each story (see photos.py) and report its quality."""
     img_dir.mkdir(parents=True, exist_ok=True)
-    missing, tried = [], 0
+    cover_slot = (fmt["width"], fmt["height"])                # story #1's photo also fills the whole cover
+    story_slot = (fmt["width"], round(fmt["height"] * 0.62))  # the photo area of a story slide, at most
+    missing, soft, tried = [], [], 0
     for s in edition["stories"]:
-        path, url = download_image(s.get("images", []), img_dir / f"story{s['rank']}")
-        s["image_file"] = os.path.relpath(path, html_dir) if path else ""
-        s["credit"] = s.get("credit") or _credit(s, url)
-        if not path:
+        slot = cover_slot if s["rank"] == 1 else story_slot
+        photo = photos.pick(s.get("images", []), slot)
+        if not photo:
+            s["image_file"] = ""
+            s["credit"] = s.get("credit") or _credit(s, None)
             missing.append(f"#{s['rank']}")
             tried += len(s.get("images", []))
             log(f"  no usable photo for #{s['rank']} ({len(s.get('images', []))} URL(s) tried) — using a designed fallback card")
+            continue
+        path = photos.save(photo, img_dir / f"story{s['rank']}", slot)
+        s["image_file"] = os.path.relpath(path, html_dir)
+        s["credit"] = s.get("credit") or _credit(s, photo.url)
+        stretch = photo.stretch(slot)
+        size = "vector" if photo.fmt == "SVG" else f"{photo.width}×{photo.height}"
+        log(f"  #{s['rank']} photo {size} → {photos.verdict(stretch)} on the {'cover' if s['rank'] == 1 else 'slide'}"
+            + (f" (stretched {stretch:.1f}×, enhanced)" if stretch > 1.02 else ""))
+        if stretch > photos.OK:
+            soft.append(f"#{s['rank']} (needs ~{math.ceil(photo.width * stretch / 100) * 100}px wide)")
     n = len(edition["stories"])
     log(f"  Photos: {n - len(missing)}/{n} stories have a real photo" + (f"; missing {', '.join(missing)}" if missing else ""))
+    if soft:
+        log(f"  ! Soft photos: {', '.join(soft)}. A bigger original (Wikimedia, a press kit, the agency's full-size file) will look sharper.")
     if missing and tried and len(missing) == n:
         log("  ! Every photo download failed. If this machine blocks news/image websites, allow them and re-render.")
 
@@ -89,14 +107,10 @@ def plan_slides(edition: dict) -> list[tuple[str, str, dict]]:
     slides = [("cover", "cover.html.j2", {"cover": edition["cover"], "lead": stories[0] if stories else {}, "rest": stories[1:5], "stories": stories, "dark_top": True})]
     for i, s in enumerate(stories):
         if i + 1 < len(stories):
-            label, text = "Next", stories[i + 1].get("tease") or stories[i + 1]["headline"]
-        elif has_numbers:
-            label, text = "Next", "Today in numbers"
+            text = stories[i + 1].get("tease") or stories[i + 1]["headline"]
         else:
-            label, text = "Last", "Quick hits + your take"
-        slides.append((f"story{s['rank']}", "story.html.j2", {
-            "story": s, "bullets": bullets(s["summary"]), "next_label": label, "next_text": text, "dark_top": True,
-        }))
+            text = "Today in numbers" if has_numbers else "Quick hits"
+        slides.append((f"story{s['rank']}", "story.html.j2", {"story": s, "next_text": text, "dark_top": True}))
     if has_numbers:
         slides.append(("numbers", "numbers.html.j2", {"stats": stats[:5], "dark_top": True}))
     if edition.get("quick_hits"):
@@ -115,10 +129,10 @@ def render(edition: dict, cfg: dict, out_dir: Path, date: dt.date, log=print) ->
     out_dir = Path(out_dir)
     html_dir = out_dir / "_html"
     html_dir.mkdir(parents=True, exist_ok=True)
-    _prepare_images(edition, out_dir / "images", html_dir, log)
+    fmt, brand = cfg["format"], cfg["brand"]
+    _prepare_images(edition, out_dir / "images", html_dir, fmt, log)
 
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=select_autoescape(["j2", "html"]))
-    fmt, brand = cfg["format"], cfg["brand"]
     tall = fmt["height"] >= 1400
     slides = plan_slides(edition)
     common = {
@@ -130,8 +144,8 @@ def render(edition: dict, cfg: dict, out_dir: Path, date: dt.date, log=print) ->
         "logo_white": logo_uri(brand, "logo_white"),
         "date_short": f"{date.day} {date:%b}".upper(),
         "total": len(slides),
-        "min_media": 600 if tall else 540,       # story photo never shrinks below this
-        "cover_min_photo": 420 if tall else 360,  # cover text starts no higher than this
+        "min_media": 700 if tall else 620,        # story photo never shrinks below this
+        "cover_min_photo": 560 if tall else 480,  # cover text starts no higher than this
     }
 
     written = []
@@ -146,7 +160,10 @@ def render(edition: dict, cfg: dict, out_dir: Path, date: dt.date, log=print) ->
             page.goto(html_path.resolve().as_uri())
             page.evaluate("window.__layout()")
             out = out_dir / f"{n:02d}_{kind}.jpg"
-            page.screenshot(path=str(out), type="jpeg", quality=fmt.get("jpeg_quality", 95))
+            # Lossless capture, then one high-quality JPEG with full colour resolution (4:4:4), so red
+            # text and fine detail stay crisp after Instagram re-compresses the upload.
+            shot = Image.open(io.BytesIO(page.screenshot(type="png"))).convert("RGB")
+            shot.save(out, "JPEG", quality=fmt.get("jpeg_quality", 100), subsampling=0, optimize=True)
             written.append(out)
             log(f"  ✓ {out.name}")
         browser.close()

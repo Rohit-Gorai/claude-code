@@ -1,4 +1,5 @@
 {% extends "base.html.j2" %}
+{% block topright %}<span class="date">{{ date_short }}</span>{% endblock %}
 {% block body %}
   <div class="media full">
     {% if lead.image_file %}<img class="photo" src="{{ lead.image_file }}" style="object-position: {{ lead.image_position or 'center 30%' }}">
@@ -6,23 +7,15 @@
     <div class="shade"></div>
   </div>
   <div class="cover-body">
-    <div class="kicker"><span class="pulse"></span>{{ date_short }} · {{ stories | length }} stories · 60 sec</div>
+    <div class="kicker"><span class="dot"></span>Today's brief · {{ stories | length }} stories</div>
     <h1 class="hook"><mark>{{ cover.hook_accent }}</mark> {{ cover.hook_rest }}</h1>
-    {% if rest %}
-    <div class="inside">
-      <div class="inside-label">Also inside <span>+{{ rest | length }} more</span></div>
-      <div class="thumbs n{{ rest | length }}">
-        {% for s in rest %}
-        <div class="thumb">
-          {% if s.image_file %}<img src="{{ s.image_file }}" style="object-position: {{ s.image_position or 'center 30%' }}">{% else %}<div class="thumb-fb"></div>{% endif %}
-          <span>{{ s.category }}</span>
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-    {% endif %}
     <div class="cta-row">
-      <span class="handle">{{ brand.handle }}</span>
+      {% if rest %}
+      <div class="more">
+        <span class="faces">{% for s in rest %}<span class="face">{% if s.image_file %}<img src="{{ s.image_file }}" style="object-position: {{ s.image_position or 'center 30%' }}">{% endif %}</span>{% endfor %}</span>
+        <span>+{{ rest | length }} more inside</span>
+      </div>
+      {% endif %}
       <span class="swipe-btn">Swipe<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
     </div>
   </div>

@@ -86,9 +86,11 @@ python -m brief guide     # prints the editorial rules + edition.json schema
    space, India pride, famous names, surprises) and political or grim ones down. See [VIRALITY.md](VIRALITY.md).
 4. **Enrich** the top 24 by opening the articles to get the lead photo and a few paragraphs of real text.
 5. **Edit.** Claude picks 5 stories plus 5 quick hits with a category mix and puts the most shareable,
-   non-political story on slide 2. It writes headline, red highlight, a 2-3 sentence summary (shown as
-   bullets), "why it matters", the key stat, a teaser for the next slide, caption hook, question, share
-   line and hashtags, and tags each story's emotion so `check` can test the edition's arc.
+   non-political story on slide 2. It writes headline, red highlight, a 15-25 word gist, a short "why it
+   matters", the key stat, a teaser for the next slide, caption hook, question, share line and hashtags,
+   and tags each story's emotion so `check` can test the edition's arc.
+6. **Render.** For each story it finds the largest version of the photo, picks the sharpest, and warns
+   when one would look soft (see [TEMPLATE.md](TEMPLATE.md#3-photo-quality)).
    The rules it follows are in `brief/editor.py` (`GUIDE`). Tweak the voice there.
 
 ## Customise
@@ -106,8 +108,8 @@ python -m brief guide     # prints the editorial rules + edition.json schema
 
 ## Photos and copyright ⚠️
 
-The tool uses each article's lead image (`og:image`) and credits the site on the slide. **A credit is
-not a licence.** Wire photos (Getty, Reuters, AP, PTI, ANI) are often copyrighted, and repeated
+The tool uses each article's lead photo (in the largest size the site serves) and credits the site on
+the slide. **A credit is not a licence.** Wire photos (Getty, Reuters, AP, PTI, ANI) are often copyrighted, and repeated
 copyright claims can get an Instagram account restricted. Safer options:
 
 - Official handouts, press-kit images, government/PIB, ISRO, team and company press photos.

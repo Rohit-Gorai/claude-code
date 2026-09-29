@@ -22,7 +22,8 @@ FONTS = ROOT / "assets" / "fonts"
 
 
 FONT_FACES = [  # (family, file, weight, style)
-    ("Poppins", "Poppins-Medium.ttf", "500", "normal"),
+    ("Source Sans 3", "SourceSans3.ttf", "200 900", "normal"),  # body text: humanist, reads fastest at a glance
+    ("Poppins", "Poppins-Medium.ttf", "500", "normal"),  # headlines, numbers, buttons: the brand face
     ("Poppins", "Poppins-SemiBold.ttf", "600", "normal"),
     ("Poppins", "Poppins-Bold.ttf", "700", "normal"),
     ("Poppins", "Poppins-ExtraBold.ttf", "800", "normal"),

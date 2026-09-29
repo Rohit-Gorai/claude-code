@@ -1,5 +1,4 @@
 {% extends "base.html.j2" %}
-{% block topright %}<span class="date">{{ date_short }}</span>{% endblock %}
 {% block body %}
   <div class="media full">
     {% if lead.image_file %}<img class="photo" src="{{ lead.image_file }}" style="object-position: {{ lead.image_position or 'center 30%' }}">
@@ -7,7 +6,7 @@
     <div class="shade"></div>
   </div>
   <div class="cover-body">
-    <div class="kicker"><span class="dot"></span>Today's brief · {{ stories | length }} stories</div>
+    <div class="kicker"><span class="dot"></span>{{ date_short }} · Today's brief · {{ stories | length }} stories</div>
     <h1 class="hook"><mark>{{ cover.hook_accent }}</mark> {{ cover.hook_rest }}</h1>
     <div class="cta-row">
       {% if rest %}

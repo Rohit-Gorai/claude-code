@@ -8,6 +8,9 @@
   --w: {{ fmt.width }}px; --h: {{ fmt.height }}px;
   --paper: {{ brand.colors.paper }}; --ink: {{ brand.colors.ink }};
   --accent: {{ brand.colors.accent }}; --dark: {{ brand.colors.dark }};
+  --accent-light: {{ brand.colors.accent_on_light or brand.colors.accent }};
+  --accent-dark: {{ brand.colors.accent_on_dark or brand.colors.accent }};
+  --on-dark: {{ brand.colors.on_dark or "#FFFFFF" }};
 }
 {{ css | safe }}
 </style>
@@ -61,25 +64,24 @@ window.__layout = async () => {
   fitLines(q(".hook"), 3, 64);
   if (q(".cover-body")) shrinkUntil([q(".hook")], 64, () => q(".cover-body").getBoundingClientRect().top >= {{ cover_min_photo }});
   // story
-  fitLines(q(".headline"), 3, 46);
-  fitLines(q(".gist"), 4, 28);
-  fitLines(q(".why"), 2, 25);
-  fitWidth(q(".next"), 20);
-  fitLines(q(".credit"), 2, 14);
+  fitLines(q(".headline"), 3, 48);
+  fitLines(q(".gist"), 4, 34);
+  fitLines(q(".why"), 2, 30);
+  fitWidth(q(".next"), 22);
   const media = q(".slide-story .media");
   if (media) {
-    shrinkUntil([q(".gist"), q(".why")], 26, () => media.getBoundingClientRect().height >= {{ min_media }});
+    shrinkUntil([q(".gist"), q(".why")], 32, () => media.getBoundingClientRect().height >= {{ min_media }});
     shrinkUntil([q(".headline")], 44, () => media.getBoundingClientRect().height >= {{ min_media }} && q(".over").getBoundingClientRect().top >= 190);
   }
   // numbers
   qa(".stats .num").forEach(el => fitWidth(el, 44));
-  qa(".stats .lbl").forEach(el => fitLines(el, 2, 24));
-  if (q(".stats")) shrinkUntil([...qa(".stats .num"), ...qa(".stats .lbl")], 24, () => fits(q(".slide")));
+  qa(".stats .lbl").forEach(el => fitLines(el, 2, 28));
+  if (q(".stats")) shrinkUntil([...qa(".stats .num"), ...qa(".stats .lbl")], 28, () => fits(q(".slide")));
   // wrap
-  qa(".hits .t").forEach(el => fitLines(el, 2, 24));
-  fitLines(q(".cta .ask"), 3, 30);
-  fitLines(q(".cta .share"), 2, 22);
-  if (q(".hits")) shrinkUntil([...qa(".hits .t"), q(".cta .ask"), q(".cta .share")], 22, () => fits(q(".slide")));
+  qa(".hits .t").forEach(el => fitLines(el, 2, 30));
+  fitLines(q(".cta .ask"), 3, 34);
+  fitLines(q(".cta .share"), 2, 28);
+  if (q(".hits")) shrinkUntil([...qa(".hits .t"), q(".cta .ask"), q(".cta .share")], 28, () => fits(q(".slide")));
   return true;
 };
 </script>

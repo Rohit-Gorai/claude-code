@@ -90,7 +90,7 @@ python -m brief guide     # prints the editorial rules + edition.json schema
    matters", the key stat, a teaser for the next slide, caption hook, question, share line and hashtags,
    and tags each story's emotion so `check` can test the edition's arc.
 6. **Render.** For each story it finds the largest version of the photo, picks the sharpest, and warns
-   when one would look soft (see [TEMPLATE.md](TEMPLATE.md#3-photo-quality)).
+   when one would look soft (see [TEMPLATE.md](TEMPLATE.md#4-photo-quality)).
    The rules it follows are in `brief/editor.py` (`GUIDE`). Tweak the voice there.
 
 ## Customise

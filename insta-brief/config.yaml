@@ -11,11 +11,14 @@ brand:
   tagline: "The day's biggest headlines. One swipe at a time."
   schedule: "10 AM · 2 PM · 6 PM · 10 PM"  # shown on the last slide so people know when to come back
   first_edition_date: 2026-09-27          # edition numbers count up from this day (No. 001)
-  colors:
-    paper: "#F6F2EA"                      # cream reading panel under the photo
-    ink: "#141416"                        # body text on cream
-    accent: "#E3120B"                     # marker highlight, progress bar, Swipe button (the logo's red dot)
-    dark: "#0E0E11"                       # "Next" bar, numbers slide, call-to-action card
+  colors:                                 # tuned for reading comfort, see TEMPLATE.md §3
+    paper: "#F6F2EA"                      # warm off-white reading panel (less glare than pure white)
+    ink: "#1F1C18"                        # warm near-black text (softer than pure black, 15:1 on paper)
+    accent: "#E3120B"                     # brand red: headline marker, swipe button (the logo's red dot)
+    accent_on_light: "#C40F09"            # red for small text on the paper (5.5:1 contrast)
+    accent_on_dark: "#FF4B3E"             # red for text on dark slides (5.4:1 contrast)
+    dark: "#17161A"                       # numbers slide and question card (deep grey, not pure black)
+    on_dark: "#EEEAE3"                    # text on dark (off-white avoids halo on OLED screens)
 
 format:
   width: 1080

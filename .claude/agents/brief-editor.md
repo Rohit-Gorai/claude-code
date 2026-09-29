@@ -89,6 +89,8 @@ If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-
    subject (a person's face, the place, the product), never a logo graphic, a generic stock
    illustration, or a share card with another outlet's big logo burned in (The Guardian's are
    skipped automatically). For a company story, a photo of its CEO or office beats its logo.
+   Story #1's photo also fills the whole cover, so give it the largest sharp photo you can find
+   (ideally 1200px+ wide, a face or a strong subject in the upper half).
 8. **Render.** Run `python -m brief render`. It prints `Photos: N/M stories have a real photo`.
    For each story still missing one, try the next source above and re-render. Use the
    text-only card only as a last resort, and name those stories in your report. If *every*

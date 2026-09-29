@@ -96,6 +96,10 @@ If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-
    handouts are usually far larger than news thumbnails. List several URLs per story, best first:
    the renderer tries bigger versions of each (it strips `-1200x675`, `?w=640`, Wikimedia `800px-`
    thumbnails), keeps the original file without re-compressing it, and picks the sharpest.
+   Photos that are still too small are AI-upscaled automatically (Real-ESRGAN, blended so it
+   never invents detail). That is a safety net, not a substitute: a real bigger original always
+   looks better. Never run a photo through any other AI tool that edits, redraws or generates
+   content; for a news page the photo must show what the camera captured.
 8. **Render.** Run `python -m brief render`. It prints each photo's size and verdict
    (`sharp`, `fine` or `soft` on the cover/slide) and `! Soft photos: …` with the width needed.
    For every soft or missing photo, find a bigger one and re-render. Use the text-only card only

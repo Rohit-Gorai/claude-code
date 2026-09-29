@@ -68,12 +68,18 @@ Every photo goes through `brief/photos.py`:
 2. **Pick the sharpest.** Each photo is scored by how much it would be stretched to fill its space.
    The cover is the hardest: a landscape photo needs to be ~2600px wide to fill 1080×1440 without
    stretching. The editor's first choice wins unless a later photo is clearly sharper.
-3. **Never lose quality.** Original files are used as-is (no second JPEG compression). If a photo
-   must be stretched, it is enlarged once with Lanczos resampling and a light sharpen. Slides are
+3. **Never lose quality.** Original files are used as-is (no second JPEG compression). Slides are
    captured losslessly and saved as maximum-quality JPEGs with full colour detail (4:4:4), so red
    text stays crisp after Instagram re-compresses them.
-4. **Say so when it's not good enough.** `render` prints each photo's size and verdict (`sharp`,
-   `fine`, `soft`) and the width a replacement needs, so the editor can find a bigger one.
+4. **AI upscaling when a photo is too small.** Photos that would be stretched go through
+   Real-ESRGAN's compact super-resolution model, run locally on the CPU (~10-15 s per photo,
+   bundled in `assets/models/`, BSD-3 licence). It removes JPEG blockiness and restores edges.
+   Because this is news, the AI result is blended 60/40 with a plain enlargement so it can't invent
+   detail, and no face-restoration model is used: people keep their real features. Turn it off with
+   `format.ai_upscale: false`; without `onnxruntime` it falls back to Lanczos + a light sharpen.
+5. **Say so when it's not good enough.** `render` prints each photo's size and verdict (`sharp`,
+   `fine`, `soft`) and the width a replacement needs. Upscaling helps, but a bigger original is
+   always better, so the editor still looks for one.
 
 ## 4. Details that keep it working every day
 

@@ -242,6 +242,21 @@ class PipelineTest(unittest.TestCase):
         self.assertLessEqual(Photo(b"", "", 2400, 3200, "JPEG").stretch(cover), 1.0)
         self.assertAlmostEqual(Photo(b"", "", 1200, 675, "JPEG").stretch(cover), 1440 / 675)
 
+    def test_small_photos_are_enlarged(self):
+        from PIL import Image
+
+        from brief import photos
+
+        img = Image.effect_noise((80, 60), 40).convert("RGB")
+        plain, how = photos.enlarge(img, 1.5, ai=False)
+        self.assertEqual((plain.size, how), ((120, 90), "sharpened"))
+        try:
+            import onnxruntime  # noqa: F401
+        except ImportError:
+            self.skipTest("onnxruntime not installed")
+        up, how = photos.enlarge(img, 1.5, ai=True)
+        self.assertEqual((up.size, how), ((120, 90), "ai"))
+
     def test_stats_feed_the_numbers_slide(self):
         from brief.render import plan_slides
 

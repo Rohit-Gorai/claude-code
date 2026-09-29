@@ -78,19 +78,21 @@ def _prepare_images(edition: dict, img_dir: Path, html_dir: Path, fmt: dict, log
             tried += len(s.get("images", []))
             log(f"  no usable photo for #{s['rank']} ({len(s.get('images', []))} URL(s) tried) — using a designed fallback card")
             continue
-        path = photos.save(photo, img_dir / f"story{s['rank']}", slot)
+        path = photos.save(photo, img_dir / f"story{s['rank']}", slot, ai=fmt.get("ai_upscale", True))
         s["image_file"] = os.path.relpath(path, html_dir)
         s["credit"] = s.get("credit") or _credit(s, photo.url)
         stretch = photo.stretch(slot)
         size = "vector" if photo.fmt == "SVG" else f"{photo.width}×{photo.height}"
+        how = {"ai": "AI-upscaled", "sharpened": "enlarged + sharpened"}.get(photo.enhanced, "")
         log(f"  #{s['rank']} photo {size} → {photos.verdict(stretch)} on the {'cover' if s['rank'] == 1 else 'slide'}"
-            + (f" (stretched {stretch:.1f}×, enhanced)" if stretch > 1.02 else ""))
+            + (f" (needed {stretch:.1f}×, {how})" if how else ""))
         if stretch > photos.OK:
             soft.append(f"#{s['rank']} (needs ~{math.ceil(photo.width * stretch / 100) * 100}px wide)")
     n = len(edition["stories"])
     log(f"  Photos: {n - len(missing)}/{n} stories have a real photo" + (f"; missing {', '.join(missing)}" if missing else ""))
     if soft:
-        log(f"  ! Soft photos: {', '.join(soft)}. A bigger original (Wikimedia, a press kit, the agency's full-size file) will look sharper.")
+        log(f"  ! Soft photos: {', '.join(soft)}. They were enhanced, but a bigger original (Wikimedia, a press kit, "
+            "the agency's full-size file) will still look sharper.")
     if missing and tried and len(missing) == n:
         log("  ! Every photo download failed. If this machine blocks news/image websites, allow them and re-render.")
 

@@ -9,12 +9,16 @@ photo that needs the least stretching to fill its space on the slide:
 
 1.0 or less is pixel-sharp. The cover is the hardest slot (1080×1440 filled edge to edge,
 so a landscape photo needs to be ~2560px wide). When a photo has to be stretched anyway, it is
-enlarged with Lanczos resampling and a light unsharp mask, which looks crisper than letting the
-browser stretch it.
+enlarged with AI super-resolution (Real-ESRGAN's compact general model, run locally on the CPU),
+which removes JPEG blockiness and restores edges. Because this is news, the AI result is blended
+with a plain Lanczos enlargement so it cannot invent detail, and no face-restoration model is
+ever used: faces keep their real features. Without onnxruntime or the model file, photos fall
+back to Lanczos + a light unsharp mask.
 """
 
 from __future__ import annotations
 
+import functools
 import io
 import math
 import re
@@ -31,6 +35,9 @@ MIN_WIDTH = 480            # anything smaller is never used
 MAX_SIDE = 4000            # bigger originals are scaled down to this (plenty for a 1080px slide)
 MAX_BYTES = 40_000_000
 SHARP, OK = 1.0, 1.3       # stretch thresholds: ≤1.0 sharp, ≤1.3 fine, above that visibly soft
+MODEL = ROOT / "assets" / "models" / "realesr-general-x4v3.onnx"  # BSD-3 licence, see LICENSE-RealESRGAN.txt
+AI_BLEND = 0.6             # share of the AI result in the final photo; the rest is a plain enlargement
+TILE, PAD = 256, 12        # the model runs in tiles to keep memory low
 WATERMARKED = ("overlay-base64", "branded_news")  # share cards with a publisher logo burned in (Guardian, BBC)
 # Query parameters that only resize/re-compress; everything else (signatures, ids) is kept.
 SIZE_PARAMS = {
@@ -80,6 +87,7 @@ class Photo:
     width: int
     height: int
     fmt: str
+    enhanced: str = ""  # "ai" or "sharpened" when save() had to enlarge it
 
     def stretch(self, slot: tuple[int, int]) -> float:
         return max(slot[0] / self.width, slot[1] / self.height)
@@ -151,7 +159,48 @@ def pick(urls: list[str], slot: tuple[int, int], limit: int = 6) -> Photo | None
     return best
 
 
-def save(photo: Photo, dest_stem: Path, slot: tuple[int, int]) -> Path:
+@functools.cache
+def _session():
+    import onnxruntime as ort
+
+    opts = ort.SessionOptions()
+    opts.log_severity_level = 3
+    return ort.InferenceSession(str(MODEL), opts, providers=["CPUExecutionProvider"])
+
+
+def ai_upscale(img: Image.Image) -> Image.Image | None:
+    """4× super-resolution with Real-ESRGAN (compact general model) on the CPU; None if unavailable."""
+    try:
+        import numpy as np
+
+        sess = _session()
+    except Exception:
+        return None
+    x = np.asarray(img.convert("RGB"), dtype=np.float32).transpose(2, 0, 1)[None] / 255.0
+    h, w = x.shape[2:]
+    out = np.zeros((3, h * 4, w * 4), dtype=np.float32)
+    for y0 in range(0, h, TILE):
+        for x0 in range(0, w, TILE):
+            y1, x1 = min(y0 + TILE, h), min(x0 + TILE, w)
+            ya, xa = max(y0 - PAD, 0), max(x0 - PAD, 0)  # overlap so tile edges don't show
+            tile = sess.run(None, {"input": x[:, :, ya : min(y1 + PAD, h), xa : min(x1 + PAD, w)]})[0][0]
+            oy, ox = (y0 - ya) * 4, (x0 - xa) * 4
+            out[:, y0 * 4 : y1 * 4, x0 * 4 : x1 * 4] = tile[:, oy : oy + (y1 - y0) * 4, ox : ox + (x1 - x0) * 4]
+    return Image.fromarray((np.clip(out.transpose(1, 2, 0), 0, 1) * 255 + 0.5).astype(np.uint8))
+
+
+def enlarge(img: Image.Image, scale: float, ai: bool = True) -> tuple[Image.Image, str]:
+    """Enlarge by `scale`: AI super-resolution blended with Lanczos, or Lanczos + unsharp mask."""
+    size = (math.ceil(img.width * scale), math.ceil(img.height * scale))
+    plain = img.convert("RGB").resize(size, Image.LANCZOS)
+    sr = ai_upscale(img) if ai else None
+    if sr is not None:
+        return Image.blend(plain, sr.resize(size, Image.LANCZOS), AI_BLEND), "ai"
+    sharpen = ImageFilter.UnsharpMask(radius=min(2.5, 0.9 * scale), percent=int(45 + 25 * min(scale - 1, 1.2)), threshold=2)
+    return plain.filter(sharpen), "sharpened"
+
+
+def save(photo: Photo, dest_stem: Path, slot: tuple[int, int], ai: bool = True) -> Path:
     """Write the photo for rendering: original bytes when possible, enhanced when it must stretch."""
     if photo.fmt == "SVG":
         path = dest_stem.with_suffix(".svg")
@@ -162,8 +211,7 @@ def save(photo: Photo, dest_stem: Path, slot: tuple[int, int]) -> Path:
     s = photo.stretch(slot)
     if s > 1.02:
         # Enlarge once, carefully, instead of letting the browser stretch it.
-        img = img.convert("RGB").resize((math.ceil(img.width * s), math.ceil(img.height * s)), Image.LANCZOS)
-        img = img.filter(ImageFilter.UnsharpMask(radius=min(2.5, 0.9 * s), percent=int(45 + 25 * min(s - 1, 1.2)), threshold=2))
+        img, photo.enhanced = enlarge(img, s, ai)
     elif max(img.size) > MAX_SIDE:
         img = img.convert("RGB")
         img.thumbnail((MAX_SIDE, MAX_SIDE), Image.LANCZOS)

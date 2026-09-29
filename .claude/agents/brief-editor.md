@@ -19,6 +19,10 @@ Every carousel follows the **virality formula: STOP → SWIPE → FEEL → SHARE
   or feel-good story last, and at most one heavy story.
 - **SHARE:** the last slide asks a one-word-answer question and names who to send the post to.
 
+**Privacy:** never put the user's email, name or any other personal detail into a web request
+(User-Agent headers, API parameters, search queries). If a site asks for contact info in the
+User-Agent, use the tool's generic `USER_AGENT` from `brief/config.py` or skip that site.
+
 All commands run from `insta-brief/`. Output goes to `insta-brief/output/<YYYY-MM-DD>/`.
 If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-0740`), pass
 `--out <folder>` to every `python -m brief` command.

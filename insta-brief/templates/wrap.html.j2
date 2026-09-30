@@ -1,0 +1,17 @@
+{% extends "base.html.j2" %}
+{% block body %}
+  <div class="wrap">
+    <h1 class="title">Quick <span class="acc">hits</span></h1>
+    <ol class="hits">
+      {% for h in quick_hits %}<li><span class="n">{{ loop.index }}</span><span class="t">{{ h.text }}</span></li>{% endfor %}
+    </ol>
+    <div class="cta">
+      <div class="ask">{{ question or brand.tagline }}</div>
+      {% if share_line %}<div class="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M22 3 2 10.5l8 3 3 8z"/><path d="m22 3-12 10.5"/></svg>{{ share_line }}</div>{% endif %}
+      <div class="follow">
+        <span class="btn">Follow {{ brand.handle }}</span>
+        {% if brand.schedule %}<span class="when">New brief daily · {{ brand.schedule }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

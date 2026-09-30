@@ -1,0 +1,180 @@
+{
+  "_note": "Illustrative sample for previewing the template. Stories and images are placeholders, not real news.",
+  "cover": {
+    "hook_accent": "Your SIPs",
+    "hook_rest": "just hit a record high"
+  },
+  "stories": [
+    {
+      "category": "MONEY",
+      "emotion": "USEFUL",
+      "headline": "Stock Markets Hit a Record High as Investors Return",
+      "highlight": "Record High",
+      "tease": "",
+      "summary": "Shares closed at an all-time high after three straight weeks of gains, led by banks and IT companies.",
+      "why_it_matters": "Your SIPs and mutual funds are likely up this month.",
+      "alt_text": "Glowing green stock chart climbing to a record high.",
+      "sources": [
+        "Sample Wire",
+        "Business Desk"
+      ],
+      "images": [
+        "samples/images/markets.svg"
+      ],
+      "credit": "Source: Sample Wire  ·  Illustration",
+      "stat": "3 wks",
+      "stat_label": "of straight gains",
+      "visual": {
+        "type": "trend",
+        "label": "MARKETS",
+        "value": "3 wks",
+        "direction": "up",
+        "place": "",
+        "country": "",
+        "lat": 0,
+        "lon": 0
+      }
+    },
+    {
+      "category": "SCIENCE",
+      "emotion": "AWE",
+      "headline": "New Space Telescope Spots Signs of Water on a Distant Planet",
+      "highlight": "New Space Telescope",
+      "tease": "What a telescope just spotted",
+      "summary": "Astronomers found water vapour in the air of a planet about 120 light-years away, one of the clearest readings yet.",
+      "why_it_matters": "It narrows the hunt for worlds that could support life.",
+      "alt_text": "Rocket climbing through a starry sky above Earth.",
+      "sources": [
+        "Sample Science"
+      ],
+      "images": [
+        "samples/images/space.svg"
+      ],
+      "credit": "Source: Sample Science  ·  Illustration",
+      "stat": "120",
+      "stat_label": "light-years away",
+      "visual": {
+        "type": "stamp",
+        "label": "WATER FOUND",
+        "value": "",
+        "direction": "",
+        "place": "",
+        "country": "",
+        "lat": 0,
+        "lon": 0
+      }
+    },
+    {
+      "category": "SPORTS",
+      "emotion": "PRIDE",
+      "headline": "Underdogs Chase Down 320 to Win a Thrilling Series Decider",
+      "highlight": "Underdogs",
+      "tease": "The chase nobody saw coming",
+      "summary": "Needing 320, the visitors won with two balls to spare. It's their first away series win in eleven years.",
+      "why_it_matters": "",
+      "alt_text": "Floodlit cricket stadium at night with a packed crowd.",
+      "sources": [
+        "Sample Sports"
+      ],
+      "images": [
+        "samples/images/cricket.svg"
+      ],
+      "credit": "Source: Sample Sports  ·  Illustration",
+      "stat": "320",
+      "stat_label": "runs chased down",
+      "visual": {
+        "type": "versus",
+        "label": "Visitors",
+        "value": "Hosts",
+        "direction": "",
+        "place": "",
+        "country": "",
+        "lat": 0,
+        "lon": 0
+      }
+    },
+    {
+      "category": "CLIMATE",
+      "emotion": "USEFUL",
+      "headline": "Monsoon Arrives a Week Early, Farmers Brace for Sowing Season",
+      "highlight": "Monsoon",
+      "tease": "Why farmers are smiling today",
+      "summary": "Rains reached the coast seven days ahead of schedule, so farmers can start planting on time.",
+      "why_it_matters": "Good rains usually mean cheaper vegetables later in the year.",
+      "alt_text": "Red umbrella in heavy rain over green fields.",
+      "sources": [
+        "Sample Weather Desk"
+      ],
+      "images": [],
+      "credit": "Source: Sample Weather Desk",
+      "stat": "7 days",
+      "stat_label": "ahead of schedule",
+      "visual": {
+        "type": "place",
+        "label": "",
+        "value": "",
+        "direction": "",
+        "place": "Kerala coast",
+        "country": "IND",
+        "lat": 9.93,
+        "lon": 76.26
+      }
+    },
+    {
+      "category": "TECH",
+      "emotion": "SURPRISE",
+      "headline": "Electric Buses Now Outnumber Diesel Ones in Three Big Cities",
+      "highlight": "Electric Buses",
+      "tease": "The bus quietly taking over",
+      "summary": "E-buses are now over half the fleet in three metros, and they cost about 40% less to run.",
+      "why_it_matters": "Cleaner air and quieter streets on your commute.",
+      "alt_text": "Green electric bus driving through a city at dusk.",
+      "sources": [
+        "Sample Transport Desk"
+      ],
+      "images": [
+        "samples/images/city.svg"
+      ],
+      "credit": "Source: Sample Transport Desk  ·  Illustration",
+      "stat": "40%",
+      "stat_label": "lower running costs",
+      "visual": {
+        "type": "trend",
+        "label": "RUNNING COST",
+        "value": "40%",
+        "direction": "down",
+        "place": "",
+        "country": "",
+        "lat": 0,
+        "lon": 0
+      }
+    }
+  ],
+  "quick_hits": [
+    {
+      "text": "Fuel prices unchanged for the 30th straight day"
+    },
+    {
+      "text": "New metro line opens to the public this weekend"
+    },
+    {
+      "text": "Popular chat app adds voice-note transcripts for everyone"
+    },
+    {
+      "text": "Board exam dates announced, results expected in May"
+    },
+    {
+      "text": "Record 1.2 crore passengers flew in a single month"
+    }
+  ],
+  "caption_hook": "Markets at a record, water on a far-off planet and a last-over thriller 👇",
+  "engagement_question": "Electric buses in your city: yes or no? Why?",
+  "share_line": "Send this to the friend who checks the Sensex daily",
+  "hashtags": [
+    "#stockmarket",
+    "#monsoon",
+    "#space",
+    "#cricket",
+    "#india"
+  ]
+}

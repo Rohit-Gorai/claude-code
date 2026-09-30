@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+{{ font_css | safe }}
+:root {
+  --w: {{ fmt.width }}px; --h: {{ fmt.height }}px;
+  --paper: {{ brand.colors.paper }}; --ink: {{ brand.colors.ink }};
+  --accent: {{ brand.colors.accent }}; --dark: {{ brand.colors.dark }};
+  --accent-light: {{ brand.colors.accent_on_light or brand.colors.accent }};
+  --accent-dark: {{ brand.colors.accent_on_dark or brand.colors.accent }};
+  --on-dark: {{ brand.colors.on_dark or "#FFFFFF" }};
+}
+{{ css | safe }}
+</style>
+</head>
+<body>
+<div class="slide slide-{{ kind }} {{ 'on-dark' if dark_top else 'on-light' }}">
+  {% block body %}{% endblock %}
+
+  {# A thin story-style progress bar tells people there is more to swipe, without a word. #}
+  <div class="chrome">
+    <div class="progress">{% for i in range(total) %}<i class="{{ 'done' if i + 1 < index else ('now' if i + 1 == index else '') }}"></i>{% endfor %}</div>
+    <div class="topbar">
+      {% if logo %}<img class="logo" src="{{ logo_white if dark_top else logo }}" alt="{{ brand.name }}">{% else %}<span class="wordmark">{{ brand.name }}</span>{% endif %}
+      {% block topright %}{% endblock %}
+    </div>
+  </div>
+</div>
+<script>
+// Auto-fit: shrink text until each block fits its line budget and the slide fits the canvas.
+const px = el => parseFloat(getComputedStyle(el).fontSize);
+const setPx = (el, v) => { el.style.fontSize = v + "px"; };
+const lines = el => el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight);
+function fitLines(el, maxLines, minPx) {
+  if (!el) return;
+  let size = px(el);
+  while (lines(el) > maxLines + 0.2 && size > minPx) setPx(el, --size);
+}
+function fitWidth(el, minPx) {
+  if (!el) return;
+  let size = px(el);
+  while (el.scrollWidth > el.clientWidth + 1 && size > minPx) setPx(el, --size);
+}
+// Shrink a group of elements together (keeps sizes consistent) until `done()` is true.
+function shrinkUntil(els, minPx, done) {
+  els = els.filter(Boolean);
+  if (!els.length) return;
+  let guard = 200;
+  while (!done() && guard--) {
+    let changed = false;
+    els.forEach(el => { const s = px(el); if (s > minPx) { setPx(el, s - 1); changed = true; } });
+    if (!changed) break;
+  }
+}
+const q = s => document.querySelector(s), qa = s => [...document.querySelectorAll(s)];
+const fits = el => el.scrollHeight <= el.clientHeight + 1;
+
+window.__layout = async () => {
+  await document.fonts.ready;
+  await Promise.all([...document.images].map(img => img.decode().catch(() => {})));
+  // cover
+  fitLines(q(".hook"), 3, 64);
+  if (q(".cover-body")) shrinkUntil([q(".hook")], 64, () => q(".cover-body").getBoundingClientRect().top >= {{ cover_min_photo }});
+  // story
+  fitLines(q(".headline"), 3, 48);
+  fitLines(q(".gist"), 4, 34);
+  fitLines(q(".why"), 2, 30);
+  fitWidth(q(".next"), 22);
+  const media = q(".slide-story .media");
+  if (media) {
+    shrinkUntil([q(".gist"), q(".why")], 32, () => media.getBoundingClientRect().height >= {{ min_media }});
+    shrinkUntil([q(".headline")], 44, () => media.getBoundingClientRect().height >= {{ min_media }} && q(".over").getBoundingClientRect().top >= 190);
+  }
+  // numbers
+  qa(".stats .num").forEach(el => fitWidth(el, 44));
+  qa(".stats .lbl").forEach(el => fitLines(el, 2, 28));
+  if (q(".stats")) shrinkUntil([...qa(".stats .num"), ...qa(".stats .lbl")], 28, () => fits(q(".slide")));
+  // wrap
+  qa(".hits .t").forEach(el => fitLines(el, 2, 30));
+  fitLines(q(".cta .ask"), 3, 34);
+  fitLines(q(".cta .share"), 2, 28);
+  if (q(".hits")) shrinkUntil([...qa(".hits .t"), q(".cta .ask"), q(".cta .share")], 28, () => fits(q(".slide")));
+  return true;
+};
+</script>
+</body>
+</html>

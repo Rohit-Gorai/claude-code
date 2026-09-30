@@ -1,0 +1,71 @@
+# ─────────────────────────────────────────────────────────────
+#  b.rief — Instagram news carousel generator
+#  Edit this file to rebrand, retune the feed mix, or resize.
+# ─────────────────────────────────────────────────────────────
+
+brand:
+  name: "b.rief"                          # page name (used in captions, alt text, the editor's brief)
+  logo: "assets/logo.png"                 # logo on light slides (quick hits); remove to use `name` as text
+  logo_white: "assets/logo-white.png"     # logo on photos and dark slides
+  handle: "@b.rief"                       # watermark on every slide + caption
+  tagline: "The day's biggest headlines. One swipe at a time."
+  schedule: "10 AM · 2 PM · 6 PM · 10 PM"  # shown on the last slide so people know when to come back
+  first_edition_date: 2026-09-27          # edition numbers count up from this day (No. 001)
+  colors:                                 # tuned for reading comfort, see TEMPLATE.md §3
+    paper: "#F6F2EA"                      # warm off-white reading panel (less glare than pure white)
+    ink: "#1F1C18"                        # warm near-black text (softer than pure black, 15:1 on paper)
+    accent: "#E3120B"                     # brand red: headline marker, swipe button (the logo's red dot)
+    accent_on_light: "#C40F09"            # red for small text on the paper (5.5:1 contrast)
+    accent_on_dark: "#FF4B3E"             # red for text on dark slides (5.4:1 contrast)
+    dark: "#17161A"                       # numbers slide and question card (deep grey, not pure black)
+    on_dark: "#EEEAE3"                    # text on dark (off-white avoids halo on OLED screens)
+
+format:
+  width: 1080
+  height: 1440                            # 3:4 fills the profile grid when you post by hand.
+                                          # Schedulers reject 3:4: use 1350 (4:5) if you schedule posts.
+  stories: 5                              # story slides per carousel (cover + stories + numbers + quick hits = 8)
+  quick_hits: 5                           # one-liners on the last slide
+  jpeg_quality: 100                       # maximum quality, full colour resolution (4:4:4)
+  ai_upscale: true                        # AI super-resolution (Real-ESRGAN, on CPU) for photos too small for
+                                          # their slot; blended with a plain enlargement, never redraws faces
+
+editor:
+  mode: claude                            # claude = Claude API writes the copy
+                                          # basic  = no AI, uses feed titles (for testing)
+                                          # manual = stop after fetch; Claude Code / you write edition.json
+  model: claude-opus-5
+  effort: high                            # low | medium | high — how hard Claude thinks while editing
+  language: English
+  audience: >-
+    Busy people aged 18-35, mostly in India but curious about the world, who
+    want the day's biggest headlines in under a minute. They are not news
+    junkies: explain things plainly, make them feel smart, never talk down.
+
+news:
+  max_age_hours: 26                       # ignore anything older than this
+  enrich_top: 24                          # fetch article pages for the top N clusters (images + text)
+  per_category_max: 2                     # basic mode: max stories from one category
+  feeds:
+    # Google News (India edition) — best signal for "what is everyone covering right now".
+    - {url: "https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en", category: TOP, top: true}
+    - {url: "https://news.google.com/rss/headlines/section/topic/NATION?hl=en-IN&gl=IN&ceid=IN:en", category: INDIA}
+    - {url: "https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-IN&gl=IN&ceid=IN:en", category: WORLD}
+    - {url: "https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=en-IN&gl=IN&ceid=IN:en", category: MONEY}
+    - {url: "https://news.google.com/rss/headlines/section/topic/TECHNOLOGY?hl=en-IN&gl=IN&ceid=IN:en", category: TECH}
+    - {url: "https://news.google.com/rss/headlines/section/topic/SPORTS?hl=en-IN&gl=IN&ceid=IN:en", category: SPORTS}
+    - {url: "https://news.google.com/rss/headlines/section/topic/ENTERTAINMENT?hl=en-IN&gl=IN&ceid=IN:en", category: CULTURE}
+    - {url: "https://news.google.com/rss/headlines/section/topic/SCIENCE?hl=en-IN&gl=IN&ceid=IN:en", category: SCIENCE}
+    # Publisher feeds — direct links, so we can pull photos and article text.
+    - {name: "The Hindu", url: "https://www.thehindu.com/news/national/feeder/default.rss", category: INDIA}
+    - {name: "Indian Express", url: "https://indianexpress.com/section/india/feed/", category: INDIA}
+    - {name: "NDTV", url: "https://feeds.feedburner.com/ndtvnews-top-stories", category: TOP, top: true}
+    - {name: "Hindustan Times", url: "https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml", category: INDIA}
+    - {name: "Mint", url: "https://www.livemint.com/rss/news", category: MONEY}
+    - {name: "Economic Times", url: "https://economictimes.indiatimes.com/rssfeedstopstories.cms", category: MONEY}
+    - {name: "BBC News", url: "https://feeds.bbci.co.uk/news/world/rss.xml", category: WORLD}
+    - {name: "Al Jazeera", url: "https://www.aljazeera.com/xml/rss/all.xml", category: WORLD}
+    - {name: "The Guardian", url: "https://www.theguardian.com/world/rss", category: WORLD}
+    - {name: "TechCrunch", url: "https://techcrunch.com/feed/", category: TECH}
+    - {name: "The Verge", url: "https://www.theverge.com/rss/index.xml", category: TECH}
+    - {name: "ESPNcricinfo", url: "https://www.espncricinfo.com/rss/content/story/feeds/0.xml", category: SPORTS}

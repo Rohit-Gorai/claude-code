@@ -6,13 +6,13 @@
     <div class="shade"></div>
   </div>
   <div class="cover-body">
-    <div class="kicker"><span class="dot"></span>{{ date_short }} · Today's brief · {{ stories | length }} stories</div>
+    <div class="kicker"><span class="dot"></span>{{ date_short }} · {% if cover.kicker %}{{ cover.kicker }}{% else %}Today's brief · {{ stories | length }} stories{% endif %}</div>
     <h1 class="hook"><mark>{{ cover.hook_accent }}</mark> {{ cover.hook_rest }}</h1>
     <div class="cta-row">
       {% if rest %}
       <div class="more">
         <span class="faces">{% for s in rest %}<span class="face">{% if s.image_file %}<img src="{{ s.image_file }}" style="object-position: {{ s.image_position or 'center 30%' }}">{% endif %}</span>{% endfor %}</span>
-        <span>+{{ rest | length }} more inside</span>
+        <span>+{{ stories | length - 1 }} more inside</span>
       </div>
       {% endif %}
       <span class="swipe-btn">Swipe<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>

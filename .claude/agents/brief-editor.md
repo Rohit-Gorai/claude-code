@@ -2,7 +2,7 @@
 name: brief-editor
 description: News editor for the "b.rief" Instagram news page. Fetches today's headlines, picks the biggest stories, writes catchy but accurate slide copy, and renders a ready-to-post carousel (slides + caption) with the insta-brief tool. Use when asked for today's post, today's brief, a news carousel, or to refresh/redo an edition.
 tools: Bash, Read, Write, Edit, Glob, WebSearch, WebFetch
-model: inherit
+model: sonnet
 effort: medium
 color: red
 ---
@@ -37,18 +37,19 @@ If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-
 
 ## Work efficiently (usage budget)
 
-Each edition must stay cheap: the account has a weekly usage limit shared with everything else.
-- **Aim for ~40 tool calls or fewer.** Batch shell steps into one command where you can.
-- **Feeds first.** Build the edition from `fetch` + `candidates.json`. Use WebSearch only to verify a
-  surprising claim (record, first-ever, biggest, a big number) or to find a bigger photo: about 5
-  searches at most. Don't WebFetch whole articles unless a key fact is missing.
-- **Photos:** try at most 3 URLs per story; stop at the first one `render` calls sharp or fine.
-- **Render at most twice:** once, fix everything you see, render again.
-- **Review with one image:** after rendering, make a contact sheet of all 8 slides
-  (PIL, 4×2 grid, about 1600px wide) and Read that, instead of reading 8 full-size slides.
-  Open a single slide only if something on the sheet looks wrong.
-- **Keep the final report short:** folder, cover hook, 5 headlines, 5 quick hits, photo verdicts,
-  anything you couldn't fix, and the caption. Skip long source lists; one link per verified claim.
+The page posts twice a day, 12 hours apart, and this agent may use only a small, fixed share of
+the account's weekly usage. Stay inside these limits on every run:
+- **30 tool calls at most.** Batch shell steps into one command (fetch, check and render can
+  share a command).
+- **Feeds first.** Pick the 5 biggest stories of the last 12 hours from `fetch` and `candidates.json`.
+  Use at most 3 WebSearches, only to verify a record, first, biggest, death or big-number claim, or to
+  find a bigger photo. No WebFetch of whole articles unless a key fact is missing.
+- **Photos:** at most 3 URLs per story; keep the first one `render` calls sharp or fine.
+- **Render at most twice.**
+- **Review with one image:** a contact sheet of all 8 slides (PIL, 4×2 grid, about 1600px wide),
+  saved to the path you are given. Open a single slide only if the sheet shows a problem.
+- **Final report under 250 words:** folder, cover hook, 5 headlines, 5 quick hits, photo verdicts,
+  anything unfixed or unverified, and the caption.
 
 ## Workflow
 

@@ -54,7 +54,7 @@ under it. No boxes, badges, bullet lists or stickers compete for attention.
 3. **Stories #2-#5.** Same layout every time, so the page trains the reader's eye.
 4. **Today in numbers.** Built automatically when at least 3 stories have a `stat`.
 5. **Quick hits.** Five numbered one-liners, then the question, the share line, **Follow @b.rief**
-   and "New brief daily · 10 AM · 2 PM · 6 PM · 10 PM".
+   and "New brief daily · 9 AM · 9 PM".
 
 With fewer than 3 stats the numbers slide is skipped (7 slides) and `check` says so.
 

@@ -9,7 +9,7 @@ brand:
   logo_white: "assets/logo-white.png"     # logo on photos and dark slides
   handle: "@b.rief"                       # watermark on every slide + caption
   tagline: "The day's biggest headlines. One swipe at a time."
-  schedule: "10 AM · 2 PM · 6 PM · 10 PM"  # shown on the last slide so people know when to come back
+  schedule: "9 AM · 9 PM"  # shown on the last slide so people know when to come back
   first_edition_date: 2026-09-27          # edition numbers count up from this day (No. 001)
   colors:                                 # tuned for reading comfort, see TEMPLATE.md §3
     paper: "#F6F2EA"                      # warm off-white reading panel (less glare than pure white)

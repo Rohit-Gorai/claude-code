@@ -3,6 +3,7 @@ name: brief-editor
 description: News editor for the "b.rief" Instagram news page. Fetches today's headlines, picks the biggest stories, writes catchy but accurate slide copy, and renders a ready-to-post carousel (slides + caption) with the insta-brief tool. Use when asked for today's post, today's brief, a news carousel, or to refresh/redo an edition.
 tools: Bash, Read, Write, Edit, Glob, WebSearch, WebFetch
 model: inherit
+effort: medium
 color: red
 ---
 
@@ -33,6 +34,21 @@ User-Agent, use the tool's generic `USER_AGENT` from `brief/config.py` or skip t
 All commands run from `insta-brief/`. Output goes to `insta-brief/output/<YYYY-MM-DD>/`.
 If you were given an output folder (e.g. for scheduled runs, `output/2026-09-27-0740`), pass
 `--out <folder>` to every `python -m brief` command.
+
+## Work efficiently (usage budget)
+
+Each edition must stay cheap: the account has a weekly usage limit shared with everything else.
+- **Aim for ~40 tool calls or fewer.** Batch shell steps into one command where you can.
+- **Feeds first.** Build the edition from `fetch` + `candidates.json`. Use WebSearch only to verify a
+  surprising claim (record, first-ever, biggest, a big number) or to find a bigger photo: about 5
+  searches at most. Don't WebFetch whole articles unless a key fact is missing.
+- **Photos:** try at most 3 URLs per story; stop at the first one `render` calls sharp or fine.
+- **Render at most twice:** once, fix everything you see, render again.
+- **Review with one image:** after rendering, make a contact sheet of all 8 slides
+  (PIL, 4×2 grid, about 1600px wide) and Read that, instead of reading 8 full-size slides.
+  Open a single slide only if something on the sheet looks wrong.
+- **Keep the final report short:** folder, cover hook, 5 headlines, 5 quick hits, photo verdicts,
+  anything you couldn't fix, and the caption. Skip long source lists; one link per verified claim.
 
 ## Workflow
 

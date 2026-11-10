@@ -1,0 +1,30 @@
+{% extends "base.html.j2" %}
+{% block body %}
+  <div class="media">
+    {% if story.image_file %}<img class="photo" src="{{ story.image_file }}" style="object-position: {{ story.image_position or 'center 30%' }}">
+    {% else %}<div class="fallback"><span class="fb-word">{{ story.category }}</span></div>{% endif %}
+    <div class="shade"></div>
+    {% if story.credit %}<span class="credit">{{ story.credit }}</span>{% endif %}
+    {% if v.type == "trend" %}
+    <div class="viz trend {{ v.direction }}"><span class="k">{{ v.label }}</span><span class="val"><i>{{ "▲" if v.direction == "up" else "▼" }}</i>{{ v.value }}</span></div>
+    {% elif v.type == "stamp" %}
+    <div class="viz stamp">{{ v.label }}</div>
+    {% elif v.type == "versus" %}
+    <div class="viz versus"><b>{{ v.label }}</b><i>vs</i><b>{{ v.value }}</b></div>
+    {% elif v.type == "place" %}
+    <div class="viz place">{{ map_svg | safe }}<span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>{{ v.place }}</span></div>
+    {% endif %}
+    <div class="over">
+      {% if story.category %}<div class="cat">{{ story.category }}</div>{% endif %}
+      <h2 class="headline">{{ story.hl_before }}<mark>{{ story.hl_text }}</mark>{{ story.hl_after }}</h2>
+    </div>
+  </div>
+  <div class="panel">
+    <p class="gist">{{ story.summary }}</p>
+    {% if story.why_it_matters %}<p class="why"><b>Why it matters:</b> {{ story.why_it_matters }}</p>{% endif %}
+    <div class="foot">
+      <span class="handle">{{ brand.handle }}</span>
+      <span class="next"><b>Next:</b> {{ next_text }} <i>→</i></span>
+    </div>
+  </div>
+{% endblock %}

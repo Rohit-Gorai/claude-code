@@ -1,0 +1,22 @@
+{% extends "base.html.j2" %}
+{% block body %}
+  <div class="num-bg" aria-hidden="true"><span class="num-ghost">#</span></div>
+  <div class="numbers">
+    <div class="num-kicker"><span class="dot"></span>{{ date_short }} · The day in data</div>
+    <h1 class="title">Today in <mark>numbers</mark></h1>
+    <ol class="tiles n{{ stats | length }}">
+      {% for s in stats %}
+      <li class="tile{{ ' hero' if loop.first }}">
+        <span class="tag"><b>{{ '%02d' % s.rank if s.rank else '%02d' % loop.index }}</b>{% if s.category %} · {{ s.category }}{% endif %}</span>
+        <span class="num">{{ s.stat }}</span>
+        <span class="lbl">{{ s.stat_label or s.headline }}</span>
+      </li>
+      {% endfor %}
+    </ol>
+    <div class="save-cue">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M6 3h12v18l-6-4.5L6 21z"/></svg>
+      <span>Save for later</span>
+      <span class="handle">{{ brand.handle }}</span>
+    </div>
+  </div>
+{% endblock %}

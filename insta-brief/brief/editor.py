@@ -156,6 +156,10 @@ HOW TO WRITE: SPECIFIC BEATS GENERIC
   about the reader. No wire-speak ("amid", "slams", "mulls", "sources say"). "Your AC Will Cost ₹3,000
   More From Oct 1" beats "Appliance Makers Announce Price Revision". Curiosity is good; clickbait that
   misleads is not.
+  Punch it up once before you finish: lead with the hardest fact, use contrast or stakes ("X, Not Y",
+  "Your ___ Just Got ___"), strong plain verbs. Then check every strong word against the source:
+  "misleading" is not "fake", "reports say" is not "confirmed", and no "record", "first" or framing
+  the source does not use.
 - highlight: the 1-4 words that get the red marker, the part that makes someone stop scrolling (the
   number, the name, the twist). Copy it exactly from the headline.
 - emotion: the main feeling the story gives the reader, one of AWE, USEFUL, SURPRISE, PRIDE, JOY,

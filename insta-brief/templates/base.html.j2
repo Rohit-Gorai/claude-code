@@ -74,9 +74,14 @@ window.__layout = async () => {
     shrinkUntil([q(".headline")], 44, () => media.getBoundingClientRect().height >= {{ min_media }} && q(".over").getBoundingClientRect().top >= 190);
   }
   // numbers
-  qa(".stats .num").forEach(el => fitWidth(el, 44));
-  qa(".stats .lbl").forEach(el => fitLines(el, 2, 28));
-  if (q(".stats")) shrinkUntil([...qa(".stats .num"), ...qa(".stats .lbl")], 28, () => fits(q(".slide")));
+  qa(".tile .num").forEach(el => fitWidth(el, 44));
+  qa(".tile .lbl").forEach(el => fitLines(el, 2, 22));
+  const tilesFit = () => qa(".tile").every(t => {
+    const tag = t.querySelector(".tag"), num = t.querySelector(".num"), lbl = t.querySelector(".lbl");
+    const box = t.getBoundingClientRect();
+    return lbl.getBoundingClientRect().bottom <= box.bottom - 8 && (!tag || num.getBoundingClientRect().top >= tag.getBoundingClientRect().bottom + 4);
+  });
+  if (q(".tiles")) shrinkUntil([...qa(".tile .num"), ...qa(".tile .lbl")], 22, tilesFit);
   // wrap
   qa(".hits .t").forEach(el => fitLines(el, 2, 30));
   fitLines(q(".cta .ask"), 3, 34);

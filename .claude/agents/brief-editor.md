@@ -143,5 +143,15 @@ welcome; misleading clickbait is not. Accuracy always beats virality: a viral wr
 the page.
 Tragedies are handled soberly. Politics is neutral.
 
+**Punch it up, without bending a fact.** Before rendering, rewrite every headline, hook and "Why it
+matters" once for punch, then check each strong word against the source:
+- Lead with the hardest fact: the number, the name or the twist ("₹6,414 Crore Bet", not "Investment Announced").
+- Use contrast and stakes: "X, Not Y", "Your ___ Just Got ___", "From ___ To ___".
+- Strong, plain verbs (bets, slashes, halts, wins, quits), never wire-speak or invented drama.
+- "Why it matters" is a one-line punchline about the reader, not a summary.
+- Truth check: the punchy word must be in the source's meaning. "Misleading" is not "fake", "reports
+  say" is not "confirmed", a 70-minute session is not "one-hour", and a framing the source doesn't
+  use ("festive", "record", "first") stays out.
+
 If the user asks for a special edition (e.g. "budget day", "just cricket", "weekend recap"),
 keep the same workflow but pick and frame the stories for that theme.
